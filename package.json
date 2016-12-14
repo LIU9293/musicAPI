@@ -1,5 +1,5 @@
 {
-  "name": "Music-Api",
+  "name": "music-api",
   "version": "0.1.0",
   "description": "unofficial api sdk for xiami, netease, and qq music.",
   "main": "lib/index.js",

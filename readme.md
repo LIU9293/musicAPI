@@ -1,10 +1,13 @@
 ### Music Api for 网易云、虾米、QQ音乐
 
-Basic usage
+```
+npm install music-api --save
+```
+### Basic usage
 ```javascript
-const 'MusicApi' = require('Music-Api');
+const 'musicAPI' = require('music-api');
 
-MusicApi.search('song', 'netease', {
+musicAPI.search('song', 'netease', {
   key: '陈粒',
   limit: 10,
   page: 1,
@@ -33,13 +36,13 @@ MusicApi.search('song', 'netease', {
  *          page: 第几页,
  *        }
  */
-MusicApi.search(type, vendor, query);
+musicAPI.search(type, vendor, query);
 
 /*
  * @param type 同上
  * @param vendor 同上
  * @param id 对应的曲目ID，专辑ID，歌单ID
  */
-MusicApi.get(type, vendor, id);
+musicAPI.get(type, vendor, id);
 
 ```

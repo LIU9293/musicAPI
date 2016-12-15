@@ -35,7 +35,31 @@ const searchSong = (key, limit, page) => {
     offset: (page - 1)*limit
   };
   let encData = Crypto.aesRsaEncrypt(JSON.stringify(obj));
-  return NeteaseRequest(`/cloudsearch/get/web?csrf_token=`, encData);
+  return new Promise((resolve, reject) => {
+    NeteaseRequest(`/cloudsearch/get/web?csrf_token=`, encData)
+      .then(res => {
+        let songList = res.result.songs.map(item => {
+          return {
+            album: {
+              id: item.al.id,
+              name: item.al.name,
+              cover: item.al.picUrl
+            },
+            // [{id: , name: }]
+            artists: item.ar,
+            name: item.name,
+            id: item.id,
+          }
+        });
+        let obj = {
+          success: true,
+          total: res.result.songCount,
+          songList
+        };
+        resolve(obj);
+      })
+      .catch(err => reject(err))
+  });
 }
 
 const searchPlaylist = (key, limit, page) => {

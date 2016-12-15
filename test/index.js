@@ -1,19 +1,23 @@
+'use strict'
+const express = require('express');
+const port = process.env.PORT || 8080;
+const app = express();
 const MusicApi = require('../src');
 
-function getTest () {
+app.get('/searchSong/:vendor', (req, res) => {
+  let key = req.query.key,
+      limit = req.query.limit,
+      page = req.query.page;
+  let vendor = req.params.vendor;
+  MusicApi.searchSong(vendor, {
+    key,
+    limit,
+    page,
+  })
+    .then(data => res.json(data))
+    .catch(err => res.send(err))
+})
 
-  MusicApi.get('song', 'netease', '134123')
-    .then(res => console.log(res))
-    .catch(err => console.log(err))
+app.listen(port);
 
-  MusicApi.get('song', 'xiami', '20567')
-    .then(res => console.log(res))
-    .catch(err => console.log(err))
-
-  MusicApi.get('song', 'qq', '000M0v9d3bkwVa')
-    .then(res => console.log(res))
-    .catch(err => console.log(err))
-
-}
-
-getTest()
+console.log("server started on port " + port);

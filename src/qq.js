@@ -1,3 +1,4 @@
+'use strict'
 /*
  * php api => https://github.com/metowolf/TencentMusicApi/blob/master/TencentMusicAPI.php
  */
@@ -38,7 +39,7 @@ const getSong = (mid) => {
   let url = 'http://c.y.qq.com/v8/fcg-bin/fcg_play_single_song.fcg?';
   let query = {
     'songmid': mid,
-    'format': 'json',
+    'format': 'json'
   };
   return new Promise((resolve, reject) => {
     request(`${url}${querystring.stringify(query)}`, (err, res, body) => {
@@ -64,7 +65,7 @@ const searchSong = (key, limit, page) => {
     'w': key,
     'aggr': 1,
     'lossless': 1,
-    'cr': 1,
+    'cr': 1
   };
   return new Promise((resolve, reject) => {
     request(`${url}${querystring.stringify(query)}`, (error, response, body) => {
@@ -105,13 +106,13 @@ const searchPlaylist = (key, limit, page) => {
     format: 'json',
     inCharset: 'utf8',
     outCharset: 'utf-8',
-    platform: 'yqq',
+    platform: 'yqq'
   };
   return new Promise((resolve, reject) => {
     request({
       headers: {
         Referer: 'https://y.qq.com/portal/search.html',
-        Host: 'c.y.qq.com',
+        Host: 'c.y.qq.com'
       },
       url: `${url}${querystring.stringify(query)}`
     }, (err, res, body) => {
@@ -139,13 +140,13 @@ const searchAlbum = (key, limit, page) => {
     format: 'json',
     inCharset: 'utf8',
     outCharset: 'utf-8',
-    platform: 'yqq',
+    platform: 'yqq'
   };
   return new Promise((resolve, reject) => {
     request({
       headers: {
         Referer: 'https://y.qq.com/portal/search.html',
-        Host: 'c.y.qq.com',
+        Host: 'c.y.qq.com'
       },
       url: `${url}${querystring.stringify(query)}`
     }, (err, res, body) => {
@@ -158,20 +159,20 @@ const searchAlbum = (key, limit, page) => {
   });
 }
 
-const getAlbumDetail = (mid) => {
+const getAlbum = (mid) => {
   let url = 'https://c.y.qq.com/v8/fcg-bin/fcg_v8_album_info_cp.fcg?';
   let query = {
     albummid: mid,
     format: 'json',
     inCharset: 'utf8',
     outCharset: 'utf-8',
-    platform: 'yqq',
+    platform: 'yqq'
   };
   return new Promise((resolve, reject) => {
     request({
       headers: {
         Referer: 'https://y.qq.com/portal/search.html',
-        Host: 'c.y.qq.com',
+        Host: 'c.y.qq.com'
       },
       url: `${url}${querystring.stringify(query)}`
     }, (err, res, body) => {
@@ -184,7 +185,7 @@ const getAlbumDetail = (mid) => {
   });
 }
 
-const getPlaylistDetail = (disstid) => {
+const getPlaylist = (disstid) => {
   let url = 'https://c.y.qq.com/qzone/fcg-bin/fcg_ucc_getcdinfo_byids_cp.fcg?';
   let query = {
     type: 1,
@@ -195,13 +196,13 @@ const getPlaylistDetail = (disstid) => {
     format: 'json',
     inCharset: 'utf8',
     outCharset: 'utf-8',
-    platform: 'yqq',
+    platform: 'yqq'
   };
   return new Promise((resolve, reject) => {
     request({
       headers: {
         Referer: 'https://y.qq.com/portal/search.html',
-        Host: 'c.y.qq.com',
+        Host: 'c.y.qq.com'
       },
       url: `${url}${querystring.stringify(query)}`
     }, (err, res, body) => {
@@ -221,10 +222,10 @@ const getPlaylistDetail = (disstid) => {
 }
 
 module.exports = {
-  searchSong,
-  searchPlaylist,
-  searchAlbum,
-  getSong,
-  getPlaylistDetail,
-  getAlbumDetail,
-}
+  searchSong: searchSong,
+  searchPlaylist: searchPlaylist,
+  searchAlbum: searchAlbum,
+  getSong: getSong,
+  getAlbum: getAlbum,
+  getPlaylist: getPlaylist
+};

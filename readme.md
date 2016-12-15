@@ -5,9 +5,9 @@ npm install music-api --save
 ```
 ### Basic usage
 ```javascript
-const 'musicAPI' = require('music-api');
+const musicAPI = require('music-api');
 
-musicAPI.search('song', 'netease', {
+musicAPI.searchSong('netease', {
   key: '陈粒',
   limit: 10,
   page: 1,
@@ -26,23 +26,17 @@ musicAPI.search('song', 'netease', {
  - 获取网易云、QQ音乐、虾米专辑详情
 
 ### API
-``` javascript
-/*
- * @param type one of ['song', 'album', 'playlist']
- * @param vendor one of ['xiami', 'netease', 'qq']
- * @param query = {
- *          key: 搜索值,
- *          limit: 数据量,
- *          page: 第几页,
- *        }
- */
-musicAPI.search(type, vendor, query);
-
-/*
- * @param type 同上
- * @param vendor 同上
- * @param id 对应的曲目ID，专辑ID，歌单ID
- */
-musicAPI.get(type, vendor, id);
-
+vendor是['xiami', 'qq', 'netease']中的一个.
 ```
+query = {
+  key: YOUR_SEARCH_KEY,
+  limit: 10,
+  page: 1,
+}
+```
+ - .searchSong(vendor, query)
+ - .searchAlbum(vendor, query)
+ - .searchPlaylist(vendor, query)
+ - .getSong(vendor, id)
+ - .getAlbum(vendor, id)
+ - .getPlaylist(vendor, id)

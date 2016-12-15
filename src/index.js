@@ -1,124 +1,119 @@
+'use strict'
+
 const NeteaseAPI = require('./netease');
 const XiamiAPI = require('./xiami');
 const QQAPI = require('./qq');
 
-const search = (type, vendor, query) => {
-  const { key, limit = 10, page = 1 } = query;
-  if(!key){
-    return Promise.reject('No Search Key !');
-  };
-  switch (type) {
-    case 'song':
-      switch (vendor) {
-        case 'xiami':
-          return XiamiAPI.searchSong(key, limit, page);
-          break;
-        case 'netease':
-          return NeteaseAPI.searchSong(key, limit, page);
-          break;
-        case 'qq':
-          return QQAPI.searchSong(key, limit, page);
-          break;
-        default:
-          return Promise.reject('No such vendor !');
-          break;
-      }
-      break;
-    case 'album':
-      switch (vendor) {
-        case 'xiami':
-          return XiamiAPI.searchAlbum(key, limit, page);
-          break;
-        case 'netease':
-          return NeteaseAPI.searchAlbum(key, limit, page);
-          break;
-        case 'qq':
-          return QQAPI.searchAlbum(key, limit, page);
-          break;
-        default:
-          return Promise.reject('No such vendor !');
-          break;
-      }
-      break;
-    case 'playlist':
-      switch (vendor) {
-        case 'xiami':
-          return XiamiAPI.searchPlaylist(key, limit, page);
-          break;
-        case 'netease':
-          return NeteaseAPI.searchPlaylist(key, limit, page);
-          break;
-        case 'qq':
-          return QQAPI.searchPlaylist(key, limit, page);
-          break;
-        default:
-          return Promise.reject('No such vendor !');
-          break;
-      }
-      break;
+const searchSong = (vendor, query) => {
+  if(!query.key){
+    return Promise.reject('No search key provided !');
+  }
+  let limit = query.limit || 10,
+      page = query.page || 1,
+      key = query.key;
+  switch (vendor) {
+    case 'xiami':
+      return XiamiAPI.searchSong(key, limit, page);
+    case 'qq':
+      return QQAPI.searchSong(key, limit, page);
+    case 'netease':
+      return NeteaseAPI.searchSong(key, limit, page);
     default:
-      return Promise.reject('No such search type !');
-      break;
+      return Promise.reject('the vendor is invalid !')
   }
 }
 
-const get = (type, vendor, id) => {
-  switch (type) {
-    case 'song':
-      switch (vendor) {
-        case 'xiami':
-          return XiamiAPI.getSong(id);
-          break;
-        case 'netease':
-          return NeteaseAPI.getSong(id);
-          break;
-        case 'qq':
-          return QQAPI.getSong(id);
-          break;
-        default:
-          return Promise.reject('No such vendor !');
-          break;
-      }
-      break;
-    case 'album':
-      switch (vendor) {
-        case 'xiami':
-          return XiamiAPI.getAlbumDetail(id);
-          break;
-        case 'netease':
-          return NeteaseAPI.getAlbumDetail(id);
-          break;
-        case 'qq':
-          return QQAPI.getAlbumDetail(id);
-          break;
-        default:
-          return Promise.reject('No such vendor !');
-          break;
-      }
-      break;
-    case 'playlist':
-      switch (vendor) {
-        case 'xiami':
-          return XiamiAPI.getPlaylistDetail(id);
-          break;
-        case 'netease':
-          return NeteaseAPI.getPlaylistDetail(id);
-          break;
-        case 'qq':
-          return QQAPI.getPlaylistDetail(id);
-          break;
-        default:
-          return Promise.reject('No such vendor !');
-          break;
-      }
-      break;
+const searchAlbum = (vendor, query) => {
+  if(!query.key){
+    return Promise.reject('No search key provided !');
+  }
+  let limit = query.limit || 10,
+      page = query.page || 1,
+      key = query.key;
+  switch (vendor) {
+    case 'xiami':
+      return XiamiAPI.searchAlbum(key, limit, page);
+    case 'qq':
+      return QQAPI.searchAlbum(key, limit, page);
+    case 'netease':
+      return NeteaseAPI.searchAlbum(key, limit, page);
     default:
-      return Promise.reject('No such search type !');
-      break;
+      return Promise.reject('the vendor is invalid !')
+  }
+}
+
+const searchPlaylist = (vendor, query) => {
+  if(!query.key){
+    return Promise.reject('No search key provided !');
+  }
+  let limit = query.limit || 10,
+      page = query.page || 1,
+      key = query.key;
+  switch (vendor) {
+    case 'xiami':
+      return XiamiAPI.searchPlaylist(key, limit, page);
+    case 'qq':
+      return QQAPI.searchPlaylist(key, limit, page);
+    case 'netease':
+      return NeteaseAPI.searchPlaylist(key, limit, page);
+    default:
+      return Promise.reject('the vendor is invalid !')
+  }
+}
+
+const getSong = (vendor, id) => {
+  if(!id){
+    return Promise.reject('No id provided !');
+  }
+  switch (vendor) {
+    case 'xiami':
+      return XiamiAPI.getSong(key, limit, page);
+    case 'qq':
+      return QQAPI.getSong(key, limit, page);
+    case 'netease':
+      return NeteaseAPI.getSong(key, limit, page);
+    default:
+      return Promise.reject('the vendor is invalid !')
+  }
+}
+
+const getAlbum = (vendor, id) => {
+  if(!id){
+    return Promise.reject('No id provided !');
+  }
+  switch (vendor) {
+    case 'xiami':
+      return XiamiAPI.getAlbum(key, limit, page);
+    case 'qq':
+      return QQAPI.getAlbum(key, limit, page);
+    case 'netease':
+      return NeteaseAPI.getAlbum(key, limit, page);
+    default:
+      return Promise.reject('the vendor is invalid !')
+  }
+}
+
+const getPlaylist = (vendor, id) => {
+  if(!id){
+    return Promise.reject('No id provided !');
+  }
+  switch (vendor) {
+    case 'xiami':
+      return XiamiAPI.getPlaylist(key, limit, page);
+    case 'qq':
+      return QQAPI.getPlaylist(key, limit, page);
+    case 'netease':
+      return NeteaseAPI.getPlaylist(key, limit, page);
+    default:
+      return Promise.reject('the vendor is invalid !')
   }
 }
 
 module.exports = {
-  search,
-  get,
+  searchSong: searchSong,
+  searchAlbum: searchAlbum,
+  searchPlaylist: searchPlaylist,
+  getSong: getSong,
+  getAlbum: getAlbum,
+  getPlaylist: getPlaylist
 }

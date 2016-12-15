@@ -1,3 +1,4 @@
+'use strict'
 const fetch = require('node-fetch');
 const querystring = require('querystring');
 const parseString = require('xml2js').parseString;
@@ -16,9 +17,9 @@ const xiamiFetch = (query) => {
       headers: {
         cookie: 'user_from=2;XMPLAYER_addSongsToggler=0;XMPLAYER_isOpen=0;_xiamitoken=cb8bfadfe130abdbf5e2282c30f0b39a;',
         referer: 'http://h.xiami.com/',
-        user_agent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.75 Safari/537.36',
+        user_agent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.75 Safari/537.36'
       },
-      body: querystring.stringify(query),
+      body: querystring.stringify(query)
     })
       .then(res => res.json())
       .then(json => resolve(json))
@@ -41,7 +42,7 @@ const getPlayListByHot = () => {
   return xiamiFetch({
     v: '2.0',
     app_key: 1,
-    r: 'collect/recommand',
+    r: 'collect/recommand'
   })
 }
 
@@ -52,7 +53,7 @@ const getSongsByArtist = (artistID, limit, page) => {
     'id': artistID,
     'page': page,
     'limit': limit,
-    'r': 'artist/hot-songs',
+    'r': 'artist/hot-songs'
   });
 }
 
@@ -180,7 +181,7 @@ const newRequest = (api, query) => {
             headers: {
               Host: 'acs.m.xiami.com',
               'Content-Type': 'application/x-www-form-urlencoded',
-              Cookie: `${token[0]};${token[1]}`,
+              Cookie: `${token[0]};${token[1]}`
             },
           };
 
@@ -217,28 +218,28 @@ const searchAlbum = (key, limit, page) => {
   });
 }
 
-const getAlbumDetail = (id) => {
-  return newRequest('mtop.alimusic.music.albumservice.getalbumdetail', {
+const getAlbum = (id) => {
+  return newRequest('mtop.alimusic.music.albumservice.getAlbum', {
     albumId: id
   });
 }
 
-const getPlaylistDetail = (id) => {
+const getPlaylist = (id) => {
   return newRequest('mtop.alimusic.music.list.collectservice.getcollectdetail', {
     isFullTags: false,
     listId: id,
     pagingVO: {
       page: 1,
-      pageSize: 1000,
+      pageSize: 1000
     }
   });
 }
 
 module.exports = {
-  searchSong,
-  searchPlaylist,
-  searchAlbum,
-  getSong,
-  getAlbumDetail,
-  getPlaylistDetail,
-}
+  searchSong: searchSong,
+  searchPlaylist: searchPlaylist,
+  searchAlbum: searchAlbum,
+  getSong: getSong,
+  getAlbum: getAlbum,
+  getPlaylist: getPlaylist
+};

@@ -1,3 +1,4 @@
+'use strict'
 const Crypto = require('./crypto');
 const fetch = require('node-fetch');
 const querystring = require('querystring');
@@ -9,7 +10,7 @@ const NeteaseRequest = (url, query) => {
     headers: {
       'Origin': 'http://music.163.com',
       'Referer': 'http://music.163.com',
-      'Content-Type': 'application/x-www-form-urlencoded',
+      'Content-Type': 'application/x-www-form-urlencoded'
     },
   };
   opts.body = querystring.stringify(query);
@@ -31,7 +32,7 @@ const searchSong = (key, limit, page) => {
     s: key,
     type: 1,
     limit: limit,
-    offset: (page - 1)*limit,
+    offset: (page - 1)*limit
   };
   let encData = Crypto.aesRsaEncrypt(JSON.stringify(obj));
   return NeteaseRequest(`/cloudsearch/get/web?csrf_token=`, encData);
@@ -42,7 +43,7 @@ const searchPlaylist = (key, limit, page) => {
     s: key,
     type: 1000,
     limit: limit,
-    offset: (page - 1)*limit,
+    offset: (page - 1)*limit
   };
   let encData = Crypto.aesRsaEncrypt(JSON.stringify(obj));
   return NeteaseRequest(`/cloudsearch/get/web?csrf_token=`, encData);
@@ -53,7 +54,7 @@ const searchAlbum = (key, limit, page) => {
     s: key,
     type: 10,
     limit: limit,
-    offset: (page - 1)*limit,
+    offset: (page - 1)*limit
   };
   let encData = Crypto.aesRsaEncrypt(JSON.stringify(obj));
   return NeteaseRequest(`/cloudsearch/get/web?csrf_token=`, encData);
@@ -70,29 +71,29 @@ const getSong = (id) => {
   return NeteaseRequest(`/song/enhance/player/url?csrf_token=`, encData);
 }
 
-const getAlbumDetail = (id) => {
+const getAlbum = (id) => {
   let obj = {
-    'csrf_token': '',
+    'csrf_token': ''
   };
   let encData = Crypto.aesRsaEncrypt(JSON.stringify(obj));
   return NeteaseRequest(`/v1/album/${id}?csrf_token=`, encData);
 }
 
-const getPlaylistDetail = (id) => {
+const getPlaylist = (id) => {
   let obj = {
     id,
     n: 1000,
-    'csrf_token': '',
+    'csrf_token': ''
   };
   let encData = Crypto.aesRsaEncrypt(JSON.stringify(obj));
   return NeteaseRequest(`/v3/playlist/detail?csrf_token=`, encData);
 }
 
 module.exports = {
-  searchSong,
-  searchPlaylist,
-  searchAlbum,
-  getSong,
-  getAlbumDetail,
-  getPlaylistDetail,
+  searchSong: searchSong,
+  searchPlaylist: searchPlaylist,
+  searchAlbum: searchAlbum,
+  getSong: getSong,
+  getAlbum: getAlbum,
+  getPlaylist: getPlaylist
 };

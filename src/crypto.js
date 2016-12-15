@@ -1,3 +1,4 @@
+'use strict'
 const crypto = require('crypto');
 const bigInt = require('big-integer');
 

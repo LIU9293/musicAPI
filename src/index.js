@@ -67,11 +67,11 @@ const getSong = (vendor, id) => {
   }
   switch (vendor) {
     case 'xiami':
-      return XiamiAPI.getSong(key, limit, page);
+      return XiamiAPI.getSong(id);
     case 'qq':
-      return QQAPI.getSong(key, limit, page);
+      return QQAPI.getSong(id);
     case 'netease':
-      return NeteaseAPI.getSong(key, limit, page);
+      return NeteaseAPI.getSong(id);
     default:
       return Promise.reject('the vendor is invalid !')
   }
@@ -83,11 +83,11 @@ const getAlbum = (vendor, id) => {
   }
   switch (vendor) {
     case 'xiami':
-      return XiamiAPI.getAlbum(key, limit, page);
+      return XiamiAPI.getAlbum(id);
     case 'qq':
-      return QQAPI.getAlbum(key, limit, page);
+      return QQAPI.getAlbum(id);
     case 'netease':
-      return NeteaseAPI.getAlbum(key, limit, page);
+      return NeteaseAPI.getAlbum(id);
     default:
       return Promise.reject('the vendor is invalid !')
   }
@@ -99,11 +99,11 @@ const getPlaylist = (vendor, id) => {
   }
   switch (vendor) {
     case 'xiami':
-      return XiamiAPI.getPlaylist(key, limit, page);
+      return XiamiAPI.getPlaylist(id);
     case 'qq':
-      return QQAPI.getPlaylist(key, limit, page);
+      return QQAPI.getPlaylist(id);
     case 'netease':
-      return NeteaseAPI.getPlaylist(key, limit, page);
+      return NeteaseAPI.getPlaylist(id);
     default:
       return Promise.reject('the vendor is invalid !')
   }

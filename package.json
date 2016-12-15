@@ -14,7 +14,11 @@
     "Netease",
     "QQMusic"
   ],
-  "author": "Liu Kai",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/LIU9293/musicAPI.git"
+  },
+  "author": "Liu Kai - https://github.com/LIU9293",
   "license": "MIT",
   "dependencies": {
     "big-integer": "^1.6.17",

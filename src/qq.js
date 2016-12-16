@@ -146,7 +146,7 @@ const searchPlaylist = (key, limit, page, raw) => {
         if(raw){
           resolve(json);
         } else {
-          let playlists = res.list.map(item => {
+          let playlists = json.list.map(item => {
             return {
               id: item.dissid,
               cover: item.imgurl,
@@ -160,7 +160,7 @@ const searchPlaylist = (key, limit, page, raw) => {
           });
           let obj = {
             success: true,
-            total: res.sum,
+            total: json.sum,
             playlists: playlists
           }
           resolve(obj);

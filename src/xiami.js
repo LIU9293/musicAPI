@@ -140,7 +140,7 @@ const getSong = (id, raw) => {
           if(err){
             reject({
               success: false,
-              message: err
+              message: 'err paring xml , please check xiami SDK'
             });
           } else {
             let ress = res.playlist.trackList[0].track[0];
@@ -173,7 +173,7 @@ const getSong = (id, raw) => {
       })
       .catch(err => reject({
         success: false,
-        message: err
+        message: 'error get xiami song, please check the id !'
       }))
   });
 }
@@ -388,7 +388,7 @@ const getAlbum = (id, raw) => {
       })
       .catch(err => reject({
         success: false,
-        message: err
+        message: 'err get xiami album, please query with raw=true to see the detail'
       }))
   });
 }
@@ -446,7 +446,7 @@ const getPlaylist = (id, raw) => {
       })
       .catch(err => reject({
         success: false,
-        message: err
+        message: 'err get xiami playlist, please query with raw=true to see the detail'
       }))
   });
 }

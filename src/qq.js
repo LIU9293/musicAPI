@@ -51,11 +51,18 @@ const generateKey = (mid) => {
   return new Promise((resolve, reject) => {
     request(`${url}${querystring.stringify(query)}`, (err, res, body) => {
       if (!err && res.statusCode == 200) {
-        let data = JSON.parse(body).data[0].file;
-        if(data.size_320mp3){
-          resolve('size320');
-        } else if(data.size_128mp3){
-          resolve('size128');
+        try {
+          let data = JSON.parse(body).data[0].file;
+          if(data.size_320mp3){
+            resolve('size320');
+          } else if(data.size_128mp3){
+            resolve('size128');
+          }
+        } catch (e) {
+          reject({
+            success: false,
+            message: 'no song is found with current id, play check qq song id'
+          })
         }
       } else {
         reject(err);
@@ -73,10 +80,7 @@ const getSong = (mid, raw) => {
       .then(data => {
         resolve(data)
       })
-      .catch(err => reject({
-        success: false,
-        message: err
-      }))
+      .catch(err => reject(err))
   });
 }
 
@@ -274,28 +278,35 @@ const getAlbum = (mid, raw) => {
     }, (err, res, body) => {
       if (!err && res.statusCode == 200) {
         if(raw){
-          resolve(JSON.parse(body).data);
+          resolve(JSON.parse(body));
         }
-        let ab = JSON.parse(body).data;
-        let songList = ab.list.map(item => {
-          return {
-            id: item.songmid,
-            name: item.songname,
-            artist: item.singer.map(i => {return{id: i.mid, name: i.name}})
-          }
-        });
-        let obj = {
-          success: true,
-          name: ab.name,
-          id: ab.mid,
-          cover: `https://y.gtimg.cn/music/photo_new/T002R300x300M000${ab.mid}.jpg`,
-          artist: {
-            name: ab.singername,
-            id: ab.singermid
-          },
-          songList: songList
-        };
-        resolve(obj);
+        try {
+          let ab = JSON.parse(body).data;
+          let songList = ab.list.map(item => {
+            return {
+              id: item.songmid,
+              name: item.songname,
+              artist: item.singer.map(i => {return{id: i.mid, name: i.name}})
+            }
+          });
+          let obj = {
+            success: true,
+            name: ab.name,
+            id: ab.mid,
+            cover: `https://y.gtimg.cn/music/photo_new/T002R300x300M000${ab.mid}.jpg`,
+            artist: {
+              name: ab.singername,
+              id: ab.singermid
+            },
+            songList: songList
+          };
+          resolve(obj);
+        } catch (e) {
+          reject({
+            success: false,
+            message: 'no album found with current id, please try with raw=true !'
+          })
+        }
       } else {
         reject({
           success: false,

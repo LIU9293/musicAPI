@@ -57,7 +57,7 @@ query = {
  raw: Bool, true or false /* set true to get raw data from each vendor, default is false */
 })
 ```
- - **musicAPI.getSong(vendor, query)**
+ - **musicAPI.getSong(vendor, query)** (not work with raw now, keep it false)
 
    获得歌曲播放URL,[http://118.178.190.101:2345/get/song/qq?id=003OUlho2HcRHC](http://118.178.190.101:2345/get/song/qq?id=003OUlho2HcRHC)
 

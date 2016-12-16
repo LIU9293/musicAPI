@@ -39,19 +39,24 @@ const searchSong = (key, limit, page, raw) => {
     return new Promise((resolve, reject) => {
       NeteaseRequest(`/cloudsearch/get/web?csrf_token=`, encData)
         .then(res => {
-          let songList = res.result.songs.map(item => {
-            return {
-              album: {
-                id: item.al.id,
-                name: item.al.name,
-                cover: item.al.picUrl
-              },
-              // [{id: , name: }]
-              artists: item.ar,
-              name: item.name,
-              id: item.id,
-            }
-          });
+          let songList;
+          if(res.result.songCount === 0){
+            songList = [];
+          } else {
+            songList = res.result.songs.map(item => {
+              return {
+                album: {
+                  id: item.al.id,
+                  name: item.al.name,
+                  cover: item.al.picUrl
+                },
+                // [{id: , name: }]
+                artists: item.ar,
+                name: item.name,
+                id: item.id,
+              }
+            });
+          }
           let obj = {
             success: true,
             total: res.result.songCount,
@@ -162,6 +167,12 @@ const getSong = (id, raw) => {
   return new Promise((resolve, reject) => {
     NeteaseRequest(`/song/enhance/player/url?csrf_token=`, encData)
       .then(res => {
+        if(!res.data[0].url){
+          reject({
+            success: false,
+            message: 'no match id found ! '
+          })
+        }
         resolve({
           success: true,
           url: res.data[0].url

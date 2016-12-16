@@ -54,23 +54,26 @@ app.get('/search/playlist/:vendor', (req, res) => {
 
 app.get('/get/song/:vendor', (req, res) => {
   let id = req.query.id;
-  let vendor = req.params.vendor;
-  MusicApi.getSong(vendor, id)
+  let vendor = req.params.vendor,
+      raw = req.params.raw;
+  MusicApi.getSong(vendor, id, raw)
     .then(data => res.json(data))
     .catch(err => res.send(err))
 });
 
 app.get('/get/album/:vendor', (req, res) => {
   let id = req.query.id;
-  let vendor = req.params.vendor;
-  MusicApi.getAlbum(vendor, id)
+  let vendor = req.params.vendor,
+      raw = req.params.raw;
+  MusicApi.getAlbum(vendor, id, raw)
     .then(data => res.json(data))
     .catch(err => res.send(err))
 });
 
 app.get('/get/playlist/:vendor', (req, res) => {
   let id = req.query.id;
-  let vendor = req.params.vendor;
+  let vendor = req.params.vendor,
+      raw = req.params.raw;
   MusicApi.getPlaylist(vendor, id)
     .then(data => res.json(data))
     .catch(err => res.send(err))

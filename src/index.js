@@ -64,49 +64,49 @@ const searchPlaylist = (vendor, query) => {
   }
 }
 
-const getSong = (vendor, id) => {
+const getSong = (vendor, id, raw) => {
   if(!id){
     return Promise.reject('No id provided !');
   }
   switch (vendor) {
     case 'xiami':
-      return XiamiAPI.getSong(id);
+      return XiamiAPI.getSong(id, raw);
     case 'qq':
-      return QQAPI.getSong(id);
+      return QQAPI.getSong(id, raw);
     case 'netease':
-      return NeteaseAPI.getSong(id);
+      return NeteaseAPI.getSong(id, raw);
     default:
       return Promise.reject('the vendor is invalid !')
   }
 }
 
-const getAlbum = (vendor, id) => {
+const getAlbum = (vendor, id, raw) => {
   if(!id){
     return Promise.reject('No id provided !');
   }
   switch (vendor) {
     case 'xiami':
-      return XiamiAPI.getAlbum(id);
+      return XiamiAPI.getAlbum(id, raw);
     case 'qq':
-      return QQAPI.getAlbum(id);
+      return QQAPI.getAlbum(id, raw);
     case 'netease':
-      return NeteaseAPI.getAlbum(id);
+      return NeteaseAPI.getAlbum(id, raw);
     default:
       return Promise.reject('the vendor is invalid !')
   }
 }
 
-const getPlaylist = (vendor, id) => {
+const getPlaylist = (vendor, id, raw) => {
   if(!id){
     return Promise.reject('No id provided !');
   }
   switch (vendor) {
     case 'xiami':
-      return XiamiAPI.getPlaylist(id);
+      return XiamiAPI.getPlaylist(id, raw);
     case 'qq':
-      return QQAPI.getPlaylist(id);
+      return QQAPI.getPlaylist(id, raw);
     case 'netease':
-      return NeteaseAPI.getPlaylist(id);
+      return NeteaseAPI.getPlaylist(id, raw);
     default:
       return Promise.reject('the vendor is invalid !')
   }

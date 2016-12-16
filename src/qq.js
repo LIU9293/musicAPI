@@ -36,7 +36,7 @@ const getSongNew = (mid, sizekey, sizeID) => {
   });
 }
 
-const getSong = (mid) => {
+const getSong = (mid, raw) => {
   let url = 'http://c.y.qq.com/v8/fcg-bin/fcg_play_single_song.fcg?';
   let query = {
     'songmid': mid,
@@ -150,7 +150,7 @@ const searchPlaylist = (key, limit, page, raw) => {
             return {
               id: item.dissid,
               cover: item.imgurl,
-              name: S(item.dissname).decodeHTMLEntities().s,
+              name: S(item.dissname).decodeHTMLEntities().stripTags().s,
               author: {
                 name: item.creator.name,
                 id: parseInt(item.creator.creator_uin),
@@ -233,7 +233,7 @@ const searchAlbum = (key, limit, page, raw) => {
   });
 }
 
-const getAlbum = (mid) => {
+const getAlbum = (mid, raw) => {
   let url = 'https://c.y.qq.com/v8/fcg-bin/fcg_v8_album_info_cp.fcg?';
   let query = {
     albummid: mid,
@@ -259,7 +259,7 @@ const getAlbum = (mid) => {
   });
 }
 
-const getPlaylist = (disstid) => {
+const getPlaylist = (disstid, raw) => {
   let url = 'https://c.y.qq.com/qzone/fcg-bin/fcg_ucc_getcdinfo_byids_cp.fcg?';
   let query = {
     type: 1,

@@ -148,7 +148,7 @@ const searchAlbum = (key, limit, page, raw) => {
   return NeteaseRequest(`/cloudsearch/get/web?csrf_token=`, encData);
 }
 
-const getSong = (id) => {
+const getSong = (id, raw) => {
   id = id.split('.').map(i => parseInt(i));
   let obj = {
     'ids': id,
@@ -159,7 +159,7 @@ const getSong = (id) => {
   return NeteaseRequest(`/song/enhance/player/url?csrf_token=`, encData);
 }
 
-const getAlbum = (id) => {
+const getAlbum = (id, raw) => {
   let obj = {
     'csrf_token': ''
   };
@@ -167,7 +167,7 @@ const getAlbum = (id) => {
   return NeteaseRequest(`/v1/album/${id}?csrf_token=`, encData);
 }
 
-const getPlaylist = (id) => {
+const getPlaylist = (id, raw) => {
   let obj = {
     id,
     n: 1000,

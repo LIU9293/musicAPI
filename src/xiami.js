@@ -131,25 +131,49 @@ const parseLocation = (location) => {
   return decodeURIComponent(output).replace(/\^/g, '0');
 }
 
-const getSong = (id) => {
+const getSong = (id, raw) => {
   return new Promise((resolve, reject) => {
     fetch(`http://www.xiami.com/song/playlist/id/${id}`)
       .then(res => res.text())
       .then(xml => {
         parseString(xml, (err, res) => {
           if(err){
-            reject(err);
+            reject({
+              success: false,
+              message: err
+            });
           } else {
             let ress = res.playlist.trackList[0].track[0];
             for(let i in ress){
               ress[i] = ress[i][0];
             }
             ress.url = parseLocation(ress.location);
-            resolve(ress);
+            if(raw){
+              resolve(ress);
+            } else {
+              let obj = {
+                artist: {
+                  id: ress.artistId,
+                  name: ress.artistName
+                },
+                album: {
+                  id: ress.albumId,
+                  name: ress.album_name,
+                  cover: ress.album_pic,
+                },
+                url: ress.url,
+                lyric: ress.lyric_url,
+                name: ress.name
+              };
+              resolve(obj);
+            }
           }
         });
       })
-      .catch(err => reject(err))
+      .catch(err => reject({
+        success: false,
+        message: err
+      }))
   });
 }
 
@@ -326,13 +350,13 @@ const searchAlbum = (key, limit, page, raw) => {
   });
 }
 
-const getAlbum = (id) => {
+const getAlbum = (id, raw) => {
   return newRequest('mtop.alimusic.music.albumservice.getAlbum', {
     albumId: id
   });
 }
 
-const getPlaylist = (id) => {
+const getPlaylist = (id, raw) => {
   return newRequest('mtop.alimusic.music.list.collectservice.getcollectdetail', {
     isFullTags: false,
     listId: id,

@@ -10,14 +10,15 @@ const searchSong = (vendor, query) => {
   }
   let limit = query.limit || 10,
       page = query.page || 1,
-      key = query.key;
+      key = query.key,
+      raw = query.raw || null;
   switch (vendor) {
     case 'xiami':
-      return XiamiAPI.searchSong(key, limit, page);
+      return XiamiAPI.searchSong(key, limit, page, raw);
     case 'qq':
-      return QQAPI.searchSong(key, limit, page);
+      return QQAPI.searchSong(key, limit, page, raw);
     case 'netease':
-      return NeteaseAPI.searchSong(key, limit, page);
+      return NeteaseAPI.searchSong(key, limit, page, raw);
     default:
       return Promise.reject('the vendor is invalid !')
   }

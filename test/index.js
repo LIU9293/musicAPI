@@ -7,12 +7,14 @@ const MusicApi = require('../src');
 app.get('/search/song/:vendor', (req, res) => {
   let key = req.query.key,
       limit = req.query.limit,
-      page = req.query.page;
+      page = req.query.page,
+      raw = req.query.raw;
   let vendor = req.params.vendor;
   MusicApi.searchSong(vendor, {
     key,
     limit,
     page,
+    raw
   })
     .then(data => res.json(data))
     .catch(err => res.send(err))

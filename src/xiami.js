@@ -27,45 +27,46 @@ const xiamiFetch = (query) => {
   });
 }
 
-const searchSong = (key, limit, page) => {
-  return new Promise((resolve, reject) => {
-    xiamiFetch({
-      v: '2.0',
-      key: key,
-      limit: limit,
-      page: page,
-      r: 'search/songs',
-      app_key: 1
-    })
-      .then(res => {
-        let songList = res.data.songs.map(item => {
-          return {
-            album: {
-              id: item.album_id,
-              name: item.album_name,
-              cover: item.album_logo
-            },
-            artists: [{
-              id: item.artist_id,
-              name: item.artist_name
-            }],
-            name: item.song_name,
-            id: item.song_id
-          }
-        });
-        let obj = {
-          success: true,
-          total: res.data.total,
-          songList: songList
-        };
-        resolve(obj);
+const searchSong = (key, limit, page, raw) => {
+  if(!raw){
+    return new Promise((resolve, reject) => {
+      xiamiFetch({
+        v: '2.0',
+        key: key,
+        limit: limit,
+        page: page,
+        r: 'search/songs',
+        app_key: 1
       })
-      .catch(err => reject({
-        success: false,
-        message: err
-      }))
-  });
-  /*
+        .then(res => {
+          let songList = res.data.songs.map(item => {
+            return {
+              album: {
+                id: item.album_id,
+                name: item.album_name,
+                cover: item.album_logo
+              },
+              artists: [{
+                id: item.artist_id,
+                name: item.artist_name
+              }],
+              name: item.song_name,
+              id: item.song_id
+            }
+          });
+          let obj = {
+            success: true,
+            total: res.data.total,
+            songList: songList
+          };
+          resolve(obj);
+        })
+        .catch(err => reject({
+          success: false,
+          message: err
+        }))
+    });
+  }
   return xiamiFetch({
     v: '2.0',
     key: key,
@@ -73,7 +74,7 @@ const searchSong = (key, limit, page) => {
     page: page,
     r: 'search/songs',
     app_key: 1
-  });*/
+  });
 }
 
 const getPlayListByHot = () => {

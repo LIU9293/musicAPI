@@ -68,7 +68,7 @@ const searchSong = (key, limit, page, raw) => {
   return NeteaseRequest(`/cloudsearch/get/web?csrf_token=`, encData);
 }
 
-const searchPlaylist = (key, limit, page) => {
+const searchPlaylist = (key, limit, page, raw) => {
   let obj = {
     s: key,
     type: 1000,
@@ -76,38 +76,40 @@ const searchPlaylist = (key, limit, page) => {
     offset: (page - 1)*limit
   };
   let encData = Crypto.aesRsaEncrypt(JSON.stringify(obj));
-  return new Promise((resolve, reject) => {
-    NeteaseRequest(`/cloudsearch/get/web?csrf_token=`, encData)
-      .then(res => {
-        let playlists = res.result.playlists.map(item => {
-          return {
-            id: item.id,
-            cover: item.coverImgUrl,
-            name: item.name,
-            author: {
-              name: item.creator.nickname,
-              id: item.creator.userId,
-              // @important: no avatar here
-              avatar: null
+  if(!raw){
+    return new Promise((resolve, reject) => {
+      NeteaseRequest(`/cloudsearch/get/web?csrf_token=`, encData)
+        .then(res => {
+          let playlists = res.result.playlists.map(item => {
+            return {
+              id: item.id,
+              cover: item.coverImgUrl,
+              name: item.name,
+              author: {
+                name: item.creator.nickname,
+                id: item.creator.userId,
+                // @important: no avatar here
+                avatar: null
+              }
             }
+          });
+          let obj = {
+            success: true,
+            total: res.result.playlistCount,
+            playlists: playlists
           }
-        });
-        let obj = {
-          success: true,
-          total: res.result.playlistCount,
-          playlists: playlists
-        }
-        resolve(obj);
-      })
-      .catch(err => reject({
-        success: false,
-        message: err
-      }))
-  });
-  //return NeteaseRequest(`/cloudsearch/get/web?csrf_token=`, encData);
+          resolve(obj);
+        })
+        .catch(err => reject({
+          success: false,
+          message: err
+        }))
+    });
+  }
+  return NeteaseRequest(`/cloudsearch/get/web?csrf_token=`, encData);
 }
 
-const searchAlbum = (key, limit, page) => {
+const searchAlbum = (key, limit, page, raw) => {
   let obj = {
     s: key,
     type: 10,
@@ -115,33 +117,35 @@ const searchAlbum = (key, limit, page) => {
     offset: (page - 1)*limit
   };
   let encData = Crypto.aesRsaEncrypt(JSON.stringify(obj));
-  return new Promise((resolve, reject) => {
-    NeteaseRequest(`/cloudsearch/get/web?csrf_token=`, encData)
-      .then(res => {
-        let albumList = res.result.albums.map(item => {
-          return {
-            id: item.id,
-            cover: item.picUrl,
-            name: item.name,
-            artist: {
-              name: item.artist.name,
-              id: item.artist.id
+  if(!raw){
+    return new Promise((resolve, reject) => {
+      NeteaseRequest(`/cloudsearch/get/web?csrf_token=`, encData)
+        .then(res => {
+          let albumList = res.result.albums.map(item => {
+            return {
+              id: item.id,
+              cover: item.picUrl,
+              name: item.name,
+              artist: {
+                name: item.artist.name,
+                id: item.artist.id
+              }
             }
-          }
-        });
-        let obj = {
-          success: true,
-          total: res.result.albumCount,
-          albumList: albumList
-        };
-        resolve(obj)
-      })
-      .catch(err => reject({
-        success: false,
-        message: err
-      }))
-  });
-  //return NeteaseRequest(`/cloudsearch/get/web?csrf_token=`, encData);
+          });
+          let obj = {
+            success: true,
+            total: res.result.albumCount,
+            albumList: albumList
+          };
+          resolve(obj)
+        })
+        .catch(err => reject({
+          success: false,
+          message: err
+        }))
+    });
+  }
+  return NeteaseRequest(`/cloudsearch/get/web?csrf_token=`, encData);
 }
 
 const getSong = (id) => {

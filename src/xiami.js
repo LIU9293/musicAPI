@@ -237,91 +237,93 @@ const newRequest = (api, query) => {
   });
 }
 
-const searchPlaylist = (key, limit, page) => {
-  return new Promise((resolve, reject) => {
-    newRequest('mtop.alimusic.search.searchservice.searchcollects', {
-      key,
-      pagingVO: {
-        page,
-        pageSize: limit
-      }
-    })
-      .then(res => {
-        let playlists = res.data.data.collects.map(item => {
-          return {
-            id: item.listId,
-            cover: item.collectLogo,
-            name: item.collectName,
-            author: {
-              name: item.userName,
-              id: item.userId,
-              avatar: item.authorAvatar
-            }
-          }
-        });
-        let obj = {
-          success: true,
-          total: res.data.data.pagingVO.count,
-          playlists: playlists
-        };
-        resolve(obj);
+const searchPlaylist = (key, limit, page, raw) => {
+  if(!raw){
+    return new Promise((resolve, reject) => {
+      newRequest('mtop.alimusic.search.searchservice.searchcollects', {
+        key,
+        pagingVO: {
+          page,
+          pageSize: limit
+        }
       })
-      .catch(err => reject({
-        success: false,
-        message: err
-      }))
-  });
-  /*
+        .then(res => {
+          let playlists = res.data.data.collects.map(item => {
+            return {
+              id: item.listId,
+              cover: item.collectLogo,
+              name: item.collectName,
+              author: {
+                name: item.userName,
+                id: item.userId,
+                avatar: item.authorAvatar
+              }
+            }
+          });
+          let obj = {
+            success: true,
+            total: res.data.data.pagingVO.count,
+            playlists: playlists
+          };
+          resolve(obj);
+        })
+        .catch(err => reject({
+          success: false,
+          message: err
+        }))
+    });
+  }
   return newRequest('mtop.alimusic.search.searchservice.searchcollects', {
     key,
     pagingVO: {
       page,
       pageSize: limit
     }
-  });*/
+  });
 }
 
-const searchAlbum = (key, limit, page) => {
-  return new Promise((resolve, reject) => {
-    newRequest('mtop.alimusic.search.searchservice.searchalbums', {
-      key,
-      pagingVO: {
-        page,
-        pageSize: limit
-      }
-    })
-      .then(res => {
-        let albumList = res.data.data.albums.map(item => {
-          return {
-            id: item.albumId,
-            cover: item.albumLogo,
-            name: item.albumName,
-            artist: {
-              name: item.artistName,
-              id: item.artistId
-            }
-          }
-        });
-        let obj = {
-          success: true,
-          total: res.data.data.pagingVO.count,
-          albumList: albumList
-        };
-        resolve(obj)
+const searchAlbum = (key, limit, page, raw) => {
+  if(!raw){
+    return new Promise((resolve, reject) => {
+      newRequest('mtop.alimusic.search.searchservice.searchalbums', {
+        key,
+        pagingVO: {
+          page,
+          pageSize: limit
+        }
       })
-      .catch(err => reject({
-        success: false,
-        message: err
-      }))
-  });
-  /*
+        .then(res => {
+          let albumList = res.data.data.albums.map(item => {
+            return {
+              id: item.albumId,
+              cover: item.albumLogo,
+              name: item.albumName,
+              artist: {
+                name: item.artistName,
+                id: item.artistId
+              }
+            }
+          });
+          let obj = {
+            success: true,
+            total: res.data.data.pagingVO.count,
+            albumList: albumList
+          };
+          resolve(obj)
+        })
+        .catch(err => reject({
+          success: false,
+          message: err
+        }))
+    });
+  }
   return newRequest('mtop.alimusic.search.searchservice.searchalbums', {
     key,
     pagingVO: {
       page,
       pageSize: limit
     }
-  });*/
+  });
 }
 
 const getAlbum = (id) => {

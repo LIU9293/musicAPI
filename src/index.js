@@ -30,14 +30,15 @@ const searchAlbum = (vendor, query) => {
   }
   let limit = query.limit || 10,
       page = query.page || 1,
-      key = query.key;
+      key = query.key,
+      raw = query.raw || null;
   switch (vendor) {
     case 'xiami':
-      return XiamiAPI.searchAlbum(key, limit, page);
+      return XiamiAPI.searchAlbum(key, limit, page, raw);
     case 'qq':
-      return QQAPI.searchAlbum(key, limit, page);
+      return QQAPI.searchAlbum(key, limit, page, raw);
     case 'netease':
-      return NeteaseAPI.searchAlbum(key, limit, page);
+      return NeteaseAPI.searchAlbum(key, limit, page, raw);
     default:
       return Promise.reject('the vendor is invalid !')
   }
@@ -49,14 +50,15 @@ const searchPlaylist = (vendor, query) => {
   }
   let limit = query.limit || 10,
       page = query.page || 1,
-      key = query.key;
+      key = query.key,
+      raw = query.raw || null;
   switch (vendor) {
     case 'xiami':
-      return XiamiAPI.searchPlaylist(key, limit, page);
+      return XiamiAPI.searchPlaylist(key, limit, page, raw);
     case 'qq':
-      return QQAPI.searchPlaylist(key, limit, page);
+      return QQAPI.searchPlaylist(key, limit, page, raw);
     case 'netease':
-      return NeteaseAPI.searchPlaylist(key, limit, page);
+      return NeteaseAPI.searchPlaylist(key, limit, page, raw);
     default:
       return Promise.reject('the vendor is invalid !')
   }

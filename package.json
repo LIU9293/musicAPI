@@ -25,6 +25,7 @@
     "crypto": "0.0.3",
     "node-fetch": "^1.6.3",
     "request": "^2.79.0",
+    "string": "^3.3.3",
     "xml2js": "^0.4.17"
   },
   "devDependencies": {

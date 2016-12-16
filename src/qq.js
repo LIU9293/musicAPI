@@ -5,6 +5,7 @@
 const request = require('request');
 const querystring = require('querystring');
 const origin = 'http://y.qq.com/';
+const S = require('string');
 
 const header = {
   Origin: origin,
@@ -96,7 +97,10 @@ const searchSong = (key, limit, page, raw) => {
           resolve(json); 
         }
       } else {
-        reject(error);
+        reject({
+          success: false,
+          message: error
+        });
       }
     });
   });
@@ -116,7 +120,7 @@ const searchSuggestion = (key) => {
   });
 }
 
-const searchPlaylist = (key, limit, page) => {
+const searchPlaylist = (key, limit, page, raw) => {
   let url = `https://c.y.qq.com/soso/fcgi-bin/client_music_search_songlist?`;
   let query = {
     remoteplace: 'txt.yqq.center',
@@ -138,15 +142,40 @@ const searchPlaylist = (key, limit, page) => {
       url: `${url}${querystring.stringify(query)}`
     }, (err, res, body) => {
       if (!err && res.statusCode == 200) {
-        resolve(JSON.parse(body).data);
+        let json = JSON.parse(body).data;
+        if(raw){
+          resolve(json);
+        } else {
+          let playlists = res.list.map(item => {
+            return {
+              id: item.dissid,
+              cover: item.imgurl,
+              name: S(item.dissname).decodeHTMLEntities().s,
+              author: {
+                name: item.creator.name,
+                id: parseInt(item.creator.creator_uin),
+                avatar: item.creator.avatarUrl
+              }
+            }
+          });
+          let obj = {
+            success: true,
+            total: res.sum,
+            playlists: playlists
+          }
+          resolve(obj);
+        }
       } else {
-        reject(err);
+        reject({
+          success: false,
+          message: err
+        });
       }
     })
   });
 }
 
-const searchAlbum = (key, limit, page) => {
+const searchAlbum = (key, limit, page, raw) => {
   let url = 'https://c.y.qq.com/soso/fcgi-bin/search_cp?';
   let query = {
     remoteplace: 'txt.yqq.album',
@@ -172,9 +201,33 @@ const searchAlbum = (key, limit, page) => {
       url: `${url}${querystring.stringify(query)}`
     }, (err, res, body) => {
       if (!err && res.statusCode == 200) {
-        resolve(JSON.parse(body).data.album);
+        let json = JSON.parse(body).data.album;
+        if(raw){
+          resolve(json);
+        } else {
+          let albumList = json.list.map(item => {
+            return {
+              id: item.albumMID,
+              cover: `https://y.gtimg.cn/music/photo_new/T002R300x300M000${item.albumMID}.jpg`,
+              name: item.albumName,
+              artist: {
+                name: item.singerName,
+                id: item.singerMID
+              }
+            }
+          });
+          let obj = {
+            success: true,
+            total: res.totalnum,
+            albumList: albumList
+          };
+          resolve(obj);
+        }
       } else {
-        reject(err);
+        reject({
+          success: false,
+          message: err
+        });
       }
     })
   });

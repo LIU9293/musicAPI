@@ -23,12 +23,14 @@ app.get('/search/song/:vendor', (req, res) => {
 app.get('/search/album/:vendor', (req, res) => {
   let key = req.query.key,
       limit = req.query.limit,
-      page = req.query.page;
+      page = req.query.page,
+      raw = req.query.raw;
   let vendor = req.params.vendor;
   MusicApi.searchAlbum(vendor, {
     key,
     limit,
     page,
+    raw
   })
     .then(data => res.json(data))
     .catch(err => res.send(err))
@@ -37,12 +39,14 @@ app.get('/search/album/:vendor', (req, res) => {
 app.get('/search/playlist/:vendor', (req, res) => {
   let key = req.query.key,
       limit = req.query.limit,
-      page = req.query.page;
+      page = req.query.page,
+      raw = req.query.raw;
   let vendor = req.params.vendor;
   MusicApi.searchPlaylist(vendor, {
     key,
     limit,
     page,
+    raw
   })
     .then(data => res.json(data))
     .catch(err => res.send(err))

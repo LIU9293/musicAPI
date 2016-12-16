@@ -4,7 +4,7 @@ const port = process.env.PORT || 8080;
 const app = express();
 const MusicApi = require('../src');
 
-app.get('/searchSong/:vendor', (req, res) => {
+app.get('/search/song/:vendor', (req, res) => {
   let key = req.query.key,
       limit = req.query.limit,
       page = req.query.page;
@@ -16,7 +16,59 @@ app.get('/searchSong/:vendor', (req, res) => {
   })
     .then(data => res.json(data))
     .catch(err => res.send(err))
+});
+
+app.get('/search/album/:vendor', (req, res) => {
+  let key = req.query.key,
+      limit = req.query.limit,
+      page = req.query.page;
+  let vendor = req.params.vendor;
+  MusicApi.searchAlbum(vendor, {
+    key,
+    limit,
+    page,
+  })
+    .then(data => res.json(data))
+    .catch(err => res.send(err))
+});
+
+app.get('/search/playlist/:vendor', (req, res) => {
+  let key = req.query.key,
+      limit = req.query.limit,
+      page = req.query.page;
+  let vendor = req.params.vendor;
+  MusicApi.searchPlaylist(vendor, {
+    key,
+    limit,
+    page,
+  })
+    .then(data => res.json(data))
+    .catch(err => res.send(err))
 })
+
+app.get('/get/song/:vendor', (req, res) => {
+  let id = req.query.id;
+  let vendor = req.params.vendor;
+  MusicApi.getSong(vendor, id)
+    .then(data => res.json(data))
+    .catch(err => res.send(err))
+});
+
+app.get('/get/album/:vendor', (req, res) => {
+  let id = req.query.id;
+  let vendor = req.params.vendor;
+  MusicApi.getAlbum(vendor, id)
+    .then(data => res.json(data))
+    .catch(err => res.send(err))
+});
+
+app.get('/get/playlist/:vendor', (req, res) => {
+  let id = req.query.id;
+  let vendor = req.params.vendor;
+  MusicApi.getPlaylist(vendor, id)
+    .then(data => res.json(data))
+    .catch(err => res.send(err))
+});
 
 app.listen(port);
 

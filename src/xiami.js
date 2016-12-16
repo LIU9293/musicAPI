@@ -28,6 +28,44 @@ const xiamiFetch = (query) => {
 }
 
 const searchSong = (key, limit, page) => {
+  return new Promise((resolve, reject) => {
+    xiamiFetch({
+      v: '2.0',
+      key: key,
+      limit: limit,
+      page: page,
+      r: 'search/songs',
+      app_key: 1
+    })
+      .then(res => {
+        let songList = res.data.songs.map(item => {
+          return {
+            album: {
+              id: item.album_id,
+              name: item.album_name,
+              cover: item.album_logo
+            },
+            artists: [{
+              id: item.artist_id,
+              name: item.artist_name
+            }],
+            name: item.song_name,
+            id: item.song_id
+          }
+        });
+        let obj = {
+          success: true,
+          total: res.data.total,
+          songList: songList
+        };
+        resolve(obj);
+      })
+      .catch(err => reject({
+        success: false,
+        message: err
+      }))
+  });
+  /*
   return xiamiFetch({
     v: '2.0',
     key: key,
@@ -35,7 +73,7 @@ const searchSong = (key, limit, page) => {
     page: page,
     r: 'search/songs',
     app_key: 1
-  });
+  });*/
 }
 
 const getPlayListByHot = () => {
@@ -199,23 +237,90 @@ const newRequest = (api, query) => {
 }
 
 const searchPlaylist = (key, limit, page) => {
+  return new Promise((resolve, reject) => {
+    newRequest('mtop.alimusic.search.searchservice.searchcollects', {
+      key,
+      pagingVO: {
+        page,
+        pageSize: limit
+      }
+    })
+      .then(res => {
+        let playlists = res.data.data.collects.map(item => {
+          return {
+            id: item.listId,
+            cover: item.collectLogo,
+            name: item.collectName,
+            author: {
+              name: item.userName,
+              id: item.userId,
+              avatar: item.authorAvatar
+            }
+          }
+        });
+        let obj = {
+          success: true,
+          total: res.data.data.pagingVO.count,
+          playlists: playlists
+        };
+        resolve(obj);
+      })
+      .catch(err => reject({
+        success: false,
+        message: err
+      }))
+  });
+  /*
   return newRequest('mtop.alimusic.search.searchservice.searchcollects', {
     key,
     pagingVO: {
       page,
       pageSize: limit
     }
-  });
+  });*/
 }
 
 const searchAlbum = (key, limit, page) => {
+  return new Promise((resolve, reject) => {
+    newRequest('mtop.alimusic.search.searchservice.searchalbums', {
+      key,
+      pagingVO: {
+        page,
+        pageSize: limit
+      }
+    })
+      .then(res => {
+        let albumList = res.data.data.albums.map(item => {
+          return {
+            id: item.albumId,
+            cover: item.albumLogo,
+            name: item.albumName,
+            artist: {
+              name: item.artistName,
+              id: item.artistId
+            }
+          }
+        });
+        let obj = {
+          success: true,
+          total: res.data.data.pagingVO.count,
+          albumList: albumList
+        };
+        resolve(obj)
+      })
+      .catch(err => reject({
+        success: false,
+        message: err
+      }))
+  });
+  /*
   return newRequest('mtop.alimusic.search.searchservice.searchalbums', {
     key,
     pagingVO: {
       page,
       pageSize: limit
     }
-  });
+  });*/
 }
 
 const getAlbum = (id) => {

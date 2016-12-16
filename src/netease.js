@@ -54,7 +54,7 @@ const searchSong = (key, limit, page) => {
         let obj = {
           success: true,
           total: res.result.songCount,
-          songList, songList
+          songList: songList
         };
         resolve(obj);
       })

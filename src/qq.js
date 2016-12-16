@@ -73,7 +73,24 @@ const searchSong = (key, limit, page) => {
         let json = body.replace('callback(', '');
         json = json.substr(0, json.length - 1);
         json = JSON.parse(json);
-        resolve(json);
+        let songList = json.data.song.list.map(item => {
+          return {
+            album: {
+              id: item.albumid,
+              cover: `https://y.gtimg.cn/music/photo_new/T002R300x300M000${item.albummid}.jpg`,
+              name: item.albumname
+            },
+            artists: item.singer.map(i => {return {id: i.mid, name: i.name}; }),
+            name: item.songname,
+            id: item.songmid
+          }
+        });
+        let obj = {
+          success: true,
+          total: json.data.song.totalnum,
+          songList: songList
+        };
+        resolve(obj);
       } else {
         reject(error);
       }
@@ -89,7 +106,7 @@ const searchSuggestion = (key) => {
       if(!err && res.statusCode == 200){
         resolve(JSON.parse(body));
       } else {
-        reject(error);
+        reject(err);
       }
     })
   });

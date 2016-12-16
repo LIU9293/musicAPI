@@ -152,6 +152,7 @@ const getSong = (id, raw) => {
               resolve(ress);
             } else {
               let obj = {
+                success: true,
                 artist: {
                   id: ress.artistId,
                   name: ress.artistName
@@ -351,19 +352,112 @@ const searchAlbum = (key, limit, page, raw) => {
 }
 
 const getAlbum = (id, raw) => {
-  return newRequest('mtop.alimusic.music.albumservice.getAlbum', {
-    albumId: id
+  if(raw){
+    return newRequest('mtop.alimusic.music.albumservice.getalbumdetail', {
+      albumId: id
+    });
+  }
+  return new Promise((resolve, reject) => {
+    newRequest('mtop.alimusic.music.albumservice.getalbumdetail', {
+      albumId: id
+    })
+      .then(res => {
+        let ab = res.data.data.albumDetail;
+        let songList = ab.songs.map(item => {
+          return {
+            id: item.songId,
+            name: item.songName,
+            artist: {
+              id: item.artistId,
+              name: item.artistName
+            }
+          }
+        });
+        let obj = {
+          success: true,
+          name: ab.albumName,
+          id: ab.albumId,
+          cover: ab.albumLogoM,
+          artist: {
+            name: ab.artistName,
+            id: ab.artistId
+          },
+          songList: songList
+        };
+        resolve(obj);
+      })
+      .catch(err => reject({
+        success: false,
+        message: err
+      }))
   });
 }
 
 const getPlaylist = (id, raw) => {
-  return newRequest('mtop.alimusic.music.list.collectservice.getcollectdetail', {
-    isFullTags: false,
-    listId: id,
-    pagingVO: {
-      page: 1,
-      pageSize: 1000
-    }
+  if(raw){
+    return newRequest('mtop.alimusic.music.list.collectservice.getcollectdetail', {
+      isFullTags: false,
+      listId: id,
+      pagingVO: {
+        page: 1,
+        pageSize: 1000
+      }
+    });
+  }
+  return new Promise((resolve, reject) => {
+    newRequest('mtop.alimusic.music.list.collectservice.getcollectdetail', {
+      isFullTags: false,
+      listId: id,
+      pagingVO: {
+        page: 1,
+        pageSize: 1000
+      }
+    })
+      .then(res => {
+        let pl = res.data.data.collectDetail;
+        let songList = pl.songs.map(item => {
+          return {
+            id: item.songId,
+            name: item.songName,
+            artist: {
+              name: item.artistName,
+              id: item.artistId
+            },
+            album: {
+              id: item.albumId,
+              cover: item.albumLogo,
+              name: item.albumName
+            }
+          }
+        });
+        let obj = {
+          success: true,
+          name: pl.collectName,
+          id: pl.listId,
+          cover: pl.collectLogoMiddle,
+          author: {
+            id: pl.userId,
+            name: pl.userName,
+            avatar: pl.authorAvatar
+          },
+          songList: songList
+        };
+        resolve(obj);
+      })
+      .catch(err => reject({
+        success: false,
+        message: err
+      }))
+  });
+}
+
+const getDailySuggest = (limit) => {
+  return newRequest('mtop.alimusic.recommend.songservice.getdailysongs', {
+    context: '',
+    like: '',
+    limit: limit,
+    listen: '',
+    unlike: ''
   });
 }
 

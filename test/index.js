@@ -53,28 +53,37 @@ app.get('/search/playlist/:vendor', (req, res) => {
 })
 
 app.get('/get/song/:vendor', (req, res) => {
-  let id = req.query.id;
-  let vendor = req.params.vendor,
-      raw = req.params.raw;
-  MusicApi.getSong(vendor, id, raw)
+  let id = req.query.id,
+      raw = req.query.raw;
+  let vendor = req.params.vendor;
+  MusicApi.getSong(vendor, {
+    id,
+    raw
+  })
     .then(data => res.json(data))
     .catch(err => res.send(err))
 });
 
 app.get('/get/album/:vendor', (req, res) => {
-  let id = req.query.id;
-  let vendor = req.params.vendor,
-      raw = req.params.raw;
-  MusicApi.getAlbum(vendor, id, raw)
+  let id = req.query.id,
+      raw = req.query.raw;
+  let vendor = req.params.vendor;
+  MusicApi.getAlbum(vendor, {
+    id,
+    raw
+  })
     .then(data => res.json(data))
     .catch(err => res.send(err))
 });
 
 app.get('/get/playlist/:vendor', (req, res) => {
-  let id = req.query.id;
-  let vendor = req.params.vendor,
-      raw = req.params.raw;
-  MusicApi.getPlaylist(vendor, id)
+  let id = req.query.id,
+      raw = req.query.raw;
+  let vendor = req.params.vendor;
+  MusicApi.getPlaylist(vendor, {
+    id,
+    raw
+  })
     .then(data => res.json(data))
     .catch(err => res.send(err))
 });

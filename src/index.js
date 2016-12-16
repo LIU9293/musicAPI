@@ -6,7 +6,10 @@ const QQAPI = require('./qq');
 
 const searchSong = (vendor, query) => {
   if(!query.key){
-    return Promise.reject('No search key provided !');
+    return Promise.reject({
+      success: false,
+      message: 'No search key provided !'
+    });
   }
   let limit = query.limit || 10,
       page = query.page || 1,
@@ -19,14 +22,36 @@ const searchSong = (vendor, query) => {
       return QQAPI.searchSong(key, limit, page, raw);
     case 'netease':
       return NeteaseAPI.searchSong(key, limit, page, raw);
+    case 'all':
+      return new Promise((resolve, reject) => {
+        Promise.all([
+          XiamiAPI.searchSong(key, limit, page, raw),
+          QQAPI.searchSong(key, limit, page, raw),
+          NeteaseAPI.searchSong(key, limit, page, raw)
+        ])
+          .then(res => {
+            resolve({
+              xiami: res[0],
+              qq: res[1],
+              netease: res[2]
+            });
+          })
+          .catch(err => reject(err))
+      })
     default:
-      return Promise.reject('the vendor is invalid !')
+      return Promise.reject({
+        success: false,
+        message: 'when search songs, the vendor provided is invalid !'
+      })
   }
 }
 
 const searchAlbum = (vendor, query) => {
   if(!query.key){
-    return Promise.reject('No search key provided !');
+    return Promise.reject({
+      success: false,
+      message: 'No search key provided !'
+    });
   }
   let limit = query.limit || 10,
       page = query.page || 1,
@@ -39,14 +64,36 @@ const searchAlbum = (vendor, query) => {
       return QQAPI.searchAlbum(key, limit, page, raw);
     case 'netease':
       return NeteaseAPI.searchAlbum(key, limit, page, raw);
+    case 'all':
+      return new Promise((resolve, reject) => {
+        Promise.all([
+          XiamiAPI.searchAlbum(key, limit, page, raw),
+          QQAPI.searchAlbum(key, limit, page, raw),
+          NeteaseAPI.searchAlbum(key, limit, page, raw)
+        ])
+          .then(res => {
+            resolve({
+              xiami: res[0],
+              qq: res[1],
+              netease: res[2]
+            });
+          })
+          .catch(err => reject(err))
+      });
     default:
-      return Promise.reject('the vendor is invalid !')
+      return Promise.reject({
+        success: false,
+        message: 'when search album, the vendor provided is invalid !'
+      })
   }
 }
 
 const searchPlaylist = (vendor, query) => {
   if(!query.key){
-    return Promise.reject('No search key provided !');
+    return Promise.reject({
+      success: false,
+      message: 'No search key provided !'
+    });
   }
   let limit = query.limit || 10,
       page = query.page || 1,
@@ -59,15 +106,39 @@ const searchPlaylist = (vendor, query) => {
       return QQAPI.searchPlaylist(key, limit, page, raw);
     case 'netease':
       return NeteaseAPI.searchPlaylist(key, limit, page, raw);
+    case 'all':
+      return new Promise((resolve, reject) => {
+        Promise.all([
+          XiamiAPI.searchPlaylist(key, limit, page, raw),
+          QQAPI.searchPlaylist(key, limit, page, raw),
+          NeteaseAPI.searchPlaylist(key, limit, page, raw)
+        ])
+          .then(res => {
+            resolve({
+              xiami: res[0],
+              qq: res[1],
+              netease: res[2]
+            });
+          })
+          .catch(err => reject(err))
+      });
     default:
-      return Promise.reject('the vendor is invalid !')
+      return Promise.reject({
+        success: false,
+        message: 'when search playlist, the vendor provided is invalid !'
+      })
   }
 }
 
-const getSong = (vendor, id, raw) => {
-  if(!id){
-    return Promise.reject('No id provided !');
+const getSong = (vendor, query) => {
+  if(!query.id){
+    return Promise.reject({
+      success: false,
+      message: 'No song id provided !'
+    });
   }
+  let raw = query.raw,
+      id = query.id;
   switch (vendor) {
     case 'xiami':
       return XiamiAPI.getSong(id, raw);
@@ -80,10 +151,15 @@ const getSong = (vendor, id, raw) => {
   }
 }
 
-const getAlbum = (vendor, id, raw) => {
-  if(!id){
-    return Promise.reject('No id provided !');
+const getAlbum = (vendor, query) => {
+  if(!query.id){
+    return Promise.reject({
+      success: false,
+      message: 'No album id provided !'
+    });
   }
+  let raw = query.raw,
+      id = query.id;
   switch (vendor) {
     case 'xiami':
       return XiamiAPI.getAlbum(id, raw);
@@ -96,10 +172,15 @@ const getAlbum = (vendor, id, raw) => {
   }
 }
 
-const getPlaylist = (vendor, id, raw) => {
-  if(!id){
-    return Promise.reject('No id provided !');
+const getPlaylist = (vendor, query) => {
+  if(!query.id){
+    return Promise.reject({
+      success: false,
+      message: 'No playlist id provided !'
+    });
   }
+  let raw = query.raw,
+      id = query.id;
   switch (vendor) {
     case 'xiami':
       return XiamiAPI.getPlaylist(id, raw);

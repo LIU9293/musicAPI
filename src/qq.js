@@ -12,7 +12,7 @@ const header = {
   Referer: origin,
 }
 
-const getSongNew = (mid, sizekey, sizeID) => {
+const getSongNew = (mid, sizekey) => {
   return new Promise((resolve, reject) => {
     let guid = Math.floor(Math.random()*1000000000);
     request(`https://c.y.qq.com/base/fcgi-bin/fcg_musicexpress.fcg?json=3&guid=${guid.toString()}`, (err, res, body) => {
@@ -27,16 +27,22 @@ const getSongNew = (mid, sizekey, sizeID) => {
         } else if(sizekey === 'size320'){
           perfix = 'M800';
         }
-        let uri = `http://dl.stream.qqmusic.qq.com/${perfix}${mid}.mp3?vkey=${key}&guid=${guid}&fromtag=30`;
-        resolve(uri)
+        let url = `http://dl.stream.qqmusic.qq.com/${perfix}${mid}.mp3?vkey=${key}&guid=${guid}&fromtag=30`;
+        resolve({
+          success: true,
+          url: url
+        })
       } else {
-        reject(err);
+        reject({
+          success: false,
+          message: err
+        });
       }
     })
   });
 }
 
-const getSong = (mid, raw) => {
+const generateKey = (mid) => {
   let url = 'http://c.y.qq.com/v8/fcg-bin/fcg_play_single_song.fcg?';
   let query = {
     'songmid': mid,
@@ -47,14 +53,30 @@ const getSong = (mid, raw) => {
       if (!err && res.statusCode == 200) {
         let data = JSON.parse(body).data[0].file;
         if(data.size_320mp3){
-          resolve(getSongNew(mid, 'size320', data.size_320mp3));
+          resolve('size320');
         } else if(data.size_128mp3){
-          resolve(getSongNew(mid, 'size128', data.size_128mp3));
+          resolve('size128');
         }
       } else {
         reject(err);
       }
     })
+  });
+}
+
+const getSong = (mid, raw) => {
+  return new Promise((resolve, reject) => {
+    generateKey(mid)
+      .then(size => {
+        return getSongNew(mid, size);
+      })
+      .then(data => {
+        resolve(data)
+      })
+      .catch(err => reject({
+        success: false,
+        message: err
+      }))
   });
 }
 
@@ -94,7 +116,7 @@ const searchSong = (key, limit, page, raw) => {
           };
           resolve(obj);
         } else {
-          resolve(json); 
+          resolve(json);
         }
       } else {
         reject({
@@ -218,7 +240,7 @@ const searchAlbum = (key, limit, page, raw) => {
           });
           let obj = {
             success: true,
-            total: res.totalnum,
+            total: json.totalnum,
             albumList: albumList
           };
           resolve(obj);
@@ -251,9 +273,34 @@ const getAlbum = (mid, raw) => {
       url: `${url}${querystring.stringify(query)}`
     }, (err, res, body) => {
       if (!err && res.statusCode == 200) {
-        resolve(JSON.parse(body).data);
+        if(raw){
+          resolve(JSON.parse(body).data);
+        }
+        let ab = JSON.parse(body).data;
+        let songList = ab.list.map(item => {
+          return {
+            id: item.songmid,
+            name: item.songname,
+            artist: item.singer.map(i => {return{id: i.mid, name: i.name}})
+          }
+        });
+        let obj = {
+          success: true,
+          name: ab.name,
+          id: ab.mid,
+          cover: `https://y.gtimg.cn/music/photo_new/T002R300x300M000${ab.mid}.jpg`,
+          artist: {
+            name: ab.singername,
+            id: ab.singermid
+          },
+          songList: songList
+        };
+        resolve(obj);
       } else {
-        reject(err);
+        reject({
+          success: false,
+          message: err
+        });
       }
     });
   });
@@ -266,7 +313,7 @@ const getPlaylist = (disstid, raw) => {
     json: 1,
     utf8: 1,
     onlysong: 1,
-    disstid,
+    disstid: disstid,
     format: 'json',
     inCharset: 'utf8',
     outCharset: 'utf-8',
@@ -284,12 +331,49 @@ const getPlaylist = (disstid, raw) => {
         if(body.substr(0, 12) === 'jsonCallback'){
           body = body.substr(13);
           body = body.substr(0, body.length - 1);
+        }
+        if(raw){
           resolve(JSON.parse(body));
         } else {
-          resolve(JSON.parse(body));
+          let pl = JSON.parse(body);
+          try {
+            let songList = pl.songlist.map(item => {
+              return {
+                id: item.songid,
+                name: item.songname,
+                artist: item.singer.map(i => {return{id: i.mid, name: i.name}}),
+                album: {
+                  id: item.albummid,
+                  cover: `https://y.gtimg.cn/music/photo_new/T002R300x300M000${item.albummid}.jpg`,
+                  name: item.albumname
+                }
+              }
+            });
+            let obj = {
+              success: true,
+              name: null,
+              id: pl.disstid,
+              cover: null,
+              author: {
+                id: null,
+                name: null,
+                avatar: null
+              },
+              songList: songList
+            };
+            resolve(obj);
+          } catch (e) {
+            reject({
+              success: false,
+              message: 'your qq playlist id is not correct or data mapping is not correct, try query with raw=true'
+            })
+          }
         }
       } else {
-        reject(err);
+        reject({
+          success: false,
+          message: err || res.statusCode
+        });
       }
     });
   });

@@ -156,7 +156,22 @@ const getSong = (id, raw) => {
     'csrf_token': ''
   };
   let encData = Crypto.aesRsaEncrypt(JSON.stringify(obj));
-  return NeteaseRequest(`/song/enhance/player/url?csrf_token=`, encData);
+  if(raw){
+    return NeteaseRequest(`/song/enhance/player/url?csrf_token=`, encData);
+  }
+  return new Promise((resolve, reject) => {
+    NeteaseRequest(`/song/enhance/player/url?csrf_token=`, encData)
+      .then(res => {
+        resolve({
+          success: true,
+          url: res.data[0].url
+        })
+      })
+      .catch(err => reject({
+        success: false,
+        message: err
+      }))
+  });
 }
 
 const getAlbum = (id, raw) => {
@@ -164,7 +179,38 @@ const getAlbum = (id, raw) => {
     'csrf_token': ''
   };
   let encData = Crypto.aesRsaEncrypt(JSON.stringify(obj));
-  return NeteaseRequest(`/v1/album/${id}?csrf_token=`, encData);
+  if(raw){
+    return NeteaseRequest(`/v1/album/${id}?csrf_token=`, encData);
+  }
+  return new Promise((resolve, reject) => {
+    NeteaseRequest(`/v1/album/${id}?csrf_token=`, encData)
+      .then(res => {
+        let ab = res.songs;
+        let songList = ab.map(item => {
+          return {
+            id: item.id,
+            name: item.name,
+            artist: item.ar
+          }
+        });
+        let obj = {
+          success: true,
+          name: res.album.name,
+          id: res.album.id,
+          cover: res.album.picUrl,
+          artist: {
+            name: res.album.artist.name,
+            id: res.album.artist.id
+          },
+          songList: songList
+        };
+        resolve(obj);
+      })
+      .catch(err => reject({
+        success: false,
+        message: err
+      }))
+  });
 }
 
 const getPlaylist = (id, raw) => {
@@ -174,7 +220,51 @@ const getPlaylist = (id, raw) => {
     'csrf_token': ''
   };
   let encData = Crypto.aesRsaEncrypt(JSON.stringify(obj));
-  return NeteaseRequest(`/v3/playlist/detail?csrf_token=`, encData);
+  if(raw){
+    return NeteaseRequest(`/v3/playlist/detail?csrf_token=`, encData);
+  }
+  return new Promise((resolve, reject) => {
+    NeteaseRequest(`/v3/playlist/detail?csrf_token=`, encData)
+      .then(res => {
+        try {
+          let songList = res.playlist.tracks.map(item => {
+            return {
+              id: item.id,
+              name: item.name,
+              artist: item.ar,
+              album: {
+                id: item.al.id,
+                cover: item.al.picUrl,
+                name: item.al.name
+              }
+            }
+          });
+          let obj = {
+            success: true,
+            name: res.playlist.name,
+            id: id,
+            cover: null,
+            author: {
+              id: res.playlist.creator.userId,
+              name: res.playlist.creator.nickname,
+              avatar: res.playlist.creator.avatarUrl
+            },
+            songList: songList
+          };
+          resolve(obj);
+        } catch (e) {
+          console.log(e);
+          reject({
+            success: false,
+            message: 'your netease playlist id is not correct or data mapping is not correct, try query with raw=true'
+          })
+        }
+      })
+      .catch(err => reject({
+        success: false,
+        message: err
+      }))
+  });
 }
 
 module.exports = {

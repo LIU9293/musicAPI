@@ -1,6 +1,5 @@
-'use strict'
-const crypto = require('crypto');
-const bigInt = require('big-integer');
+var crypto = require('crypto-browserify');
+var bigInt = require('big-integer');
 
 function addPadding(encText, modulus) {
     var ml = modulus.length;

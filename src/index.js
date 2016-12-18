@@ -1,5 +1,4 @@
 'use strict'
-
 const NeteaseAPI = require('./netease');
 const XiamiAPI = require('./xiami');
 const QQAPI = require('./qq');
@@ -193,7 +192,7 @@ const getPlaylist = (vendor, query) => {
   }
 }
 
-module.exports = {
+const musicAPI = {
   searchSong: searchSong,
   searchAlbum: searchAlbum,
   searchPlaylist: searchPlaylist,
@@ -201,3 +200,5 @@ module.exports = {
   getAlbum: getAlbum,
   getPlaylist: getPlaylist
 }
+
+module.exports = musicAPI

@@ -1,17 +1,19 @@
 'use strict'
-const Crypto = require('./crypto');
-const fetch = require('node-fetch');
+const Enc = require('./crypto');
 const querystring = require('querystring');
 const NETEASE_API_URL = 'http://music.163.com/weapi';
+require('isomorphic-fetch');
 
 const NeteaseRequest = (url, query) => {
   let opts = {
+    mode: 'no-cors',
     method: 'POST',
     headers: {
       'Origin': 'http://music.163.com',
       'Referer': 'http://music.163.com',
       'Content-Type': 'application/x-www-form-urlencoded'
     },
+    credentials: 'include'
   };
   opts.body = querystring.stringify(query);
   return new Promise((resolve, reject) => {
@@ -34,7 +36,7 @@ const searchSong = (key, limit, page, raw) => {
     limit: limit,
     offset: (page - 1)*limit
   };
-  let encData = Crypto.aesRsaEncrypt(JSON.stringify(obj));
+  let encData = Enc.aesRsaEncrypt(JSON.stringify(obj));
   if(!raw){
     return new Promise((resolve, reject) => {
       NeteaseRequest(`/cloudsearch/get/web?csrf_token=`, encData)
@@ -80,7 +82,7 @@ const searchPlaylist = (key, limit, page, raw) => {
     limit: limit,
     offset: (page - 1)*limit
   };
-  let encData = Crypto.aesRsaEncrypt(JSON.stringify(obj));
+  let encData = Enc.aesRsaEncrypt(JSON.stringify(obj));
   if(!raw){
     return new Promise((resolve, reject) => {
       NeteaseRequest(`/cloudsearch/get/web?csrf_token=`, encData)
@@ -121,7 +123,7 @@ const searchAlbum = (key, limit, page, raw) => {
     limit: limit,
     offset: (page - 1)*limit
   };
-  let encData = Crypto.aesRsaEncrypt(JSON.stringify(obj));
+  let encData = Enc.aesRsaEncrypt(JSON.stringify(obj));
   if(!raw){
     return new Promise((resolve, reject) => {
       NeteaseRequest(`/cloudsearch/get/web?csrf_token=`, encData)
@@ -160,7 +162,7 @@ const getSong = (id, raw) => {
     'br': 999000,
     'csrf_token': ''
   };
-  let encData = Crypto.aesRsaEncrypt(JSON.stringify(obj));
+  let encData = Enc.aesRsaEncrypt(JSON.stringify(obj));
   if(raw){
     return NeteaseRequest(`/song/enhance/player/url?csrf_token=`, encData);
   }
@@ -189,7 +191,7 @@ const getAlbum = (id, raw) => {
   let obj = {
     'csrf_token': ''
   };
-  let encData = Crypto.aesRsaEncrypt(JSON.stringify(obj));
+  let encData = Enc.aesRsaEncrypt(JSON.stringify(obj));
   if(raw){
     return NeteaseRequest(`/v1/album/${id}?csrf_token=`, encData);
   }
@@ -230,7 +232,7 @@ const getPlaylist = (id, raw) => {
     n: 1000,
     'csrf_token': ''
   };
-  let encData = Crypto.aesRsaEncrypt(JSON.stringify(obj));
+  let encData = Enc.aesRsaEncrypt(JSON.stringify(obj));
   if(raw){
     return NeteaseRequest(`/v3/playlist/detail?csrf_token=`, encData);
   }

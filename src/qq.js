@@ -2,10 +2,10 @@
 /*
  * php api => https://github.com/metowolf/TencentMusicApi/blob/master/TencentMusicAPI.php
  */
-const request = require('request');
 const querystring = require('querystring');
 const origin = 'http://y.qq.com/';
 const S = require('string');
+require('isomorphic-fetch');
 
 const header = {
   Origin: origin,
@@ -15,11 +15,14 @@ const header = {
 const getSongNew = (mid, sizekey) => {
   return new Promise((resolve, reject) => {
     let guid = Math.floor(Math.random()*1000000000);
-    request(`https://c.y.qq.com/base/fcgi-bin/fcg_musicexpress.fcg?json=3&guid=${guid.toString()}`, (err, res, body) => {
-      if (!err && res.statusCode == 200) {
-        body = body.replace('jsonCallback(', '').trim();
-        body = body.substr(0, body.length - 2);
-        let json = JSON.parse(body);
+    fetch(`https://c.y.qq.com/base/fcgi-bin/fcg_musicexpress.fcg?json=3&guid=${guid.toString()}`)
+      .then(res => res.text())
+      .then(text => {
+        text = text.replace('jsonCallback(', '').trim();
+        text = text.substr(0, text.length - 2);
+        return Promise.resolve(JSON.parse(text));
+      })
+      .then(json => {
         let key = json.key;
         let perfix = '';
         if(sizekey === 'size128'){
@@ -32,13 +35,11 @@ const getSongNew = (mid, sizekey) => {
           success: true,
           url: url
         })
-      } else {
-        reject({
-          success: false,
-          message: err
-        });
-      }
-    })
+      })
+      .catch(err => reject({
+        success: false,
+        message: err
+      }))
   });
 }
 
@@ -49,37 +50,28 @@ const generateKey = (mid) => {
     'format': 'json'
   };
   return new Promise((resolve, reject) => {
-    request(`${url}${querystring.stringify(query)}`, (err, res, body) => {
-      if (!err && res.statusCode == 200) {
-        try {
-          let data = JSON.parse(body).data[0].file;
-          if(data.size_320mp3){
-            resolve('size320');
-          } else if(data.size_128mp3){
-            resolve('size128');
-          }
-        } catch (e) {
-          reject({
-            success: false,
-            message: 'no song is found with current id, play check qq song id'
-          })
+    fetch(`${url}${querystring.stringify(query)}`)
+      .then(res => res.json())
+      .then(d => {
+        let data = d.data[0].file;
+        if(data.size_320mp3){
+          resolve('size320');
+        } else if(data.size_128mp3){
+          resolve('size128');
         }
-      } else {
-        reject(err);
-      }
-    })
+      })
+      .catch(err => reject({
+        success: false,
+        message: 'no song is found with current id, play check qq song id'
+      }))
   });
 }
 
 const getSong = (mid, raw) => {
   return new Promise((resolve, reject) => {
     generateKey(mid)
-      .then(size => {
-        return getSongNew(mid, size);
-      })
-      .then(data => {
-        resolve(data)
-      })
+      .then(size => getSongNew(mid, size))
+      .then(data => resolve(data))
       .catch(err => reject(err))
   });
 }
@@ -95,54 +87,42 @@ const searchSong = (key, limit, page, raw) => {
     'cr': 1
   };
   return new Promise((resolve, reject) => {
-    request(`${url}${querystring.stringify(query)}`, (error, response, body) => {
-      if (!error && response.statusCode == 200) {
-        let json = body.replace('callback(', '');
-        json = json.substr(0, json.length - 1);
-        json = JSON.parse(json);
-        if(!raw){
-          let songList = json.data.song.list.map(item => {
-            return {
-              album: {
-                id: item.albumid,
-                cover: `https://y.gtimg.cn/music/photo_new/T002R300x300M000${item.albummid}.jpg`,
-                name: item.albumname
-              },
-              artists: item.singer.map(i => {return {id: i.mid, name: i.name}; }),
-              name: item.songname,
-              id: item.songmid
-            }
-          });
-          let obj = {
-            success: true,
-            total: json.data.song.totalnum,
-            songList: songList
-          };
-          resolve(obj);
-        } else {
-          resolve(json);
-        }
-      } else {
-        reject({
-          success: false,
-          message: error
-        });
-      }
-    });
-  });
-}
-
-//网页版搜索建议
-const searchSuggestion = (key) => {
-  let url = `https://c.y.qq.com/splcloud/fcgi-bin/smartbox_new.fcg?format=json&key=${key}&platform=yqq`;
-  return new Promise((resolve, reject) => {
-    request(url, (err, res, body) => {
-      if(!err && res.statusCode == 200){
-        resolve(JSON.parse(body));
-      } else {
-        reject(err);
-      }
+    fetch(`${url}${querystring.stringify(query)}`, {
+      mode: 'no-cors'
     })
+      .then(res => res.text())
+      .then(text => {
+        if(text.substr(0, 8) === 'callback'){
+          text = text.replace('callback(', '');
+          let json = JSON.parse(text.substr(0, text.length - 1));
+          if(!raw){
+            let songList = json.data.song.list.map(item => {
+              return {
+                album: {
+                  id: item.albumid,
+                  cover: `https://y.gtimg.cn/music/photo_new/T002R300x300M000${item.albummid}.jpg`,
+                  name: item.albumname
+                },
+                artists: item.singer.map(i => {return {id: i.mid, name: i.name}; }),
+                name: item.songname,
+                id: item.songmid
+              }
+            });
+            let obj = {
+              success: true,
+              total: json.data.song.totalnum,
+              songList: songList
+            };
+            resolve(obj);
+          } else {
+            resolve(json);
+          }
+        }
+      })
+      .catch(err => reject({
+        success: false,
+        message: err
+      }))
   });
 }
 
@@ -160,18 +140,18 @@ const searchPlaylist = (key, limit, page, raw) => {
     platform: 'yqq'
   };
   return new Promise((resolve, reject) => {
-    request({
+    fetch(`${url}${querystring.stringify(query)}`, {
       headers: {
         Referer: 'https://y.qq.com/portal/search.html',
         Host: 'c.y.qq.com'
       },
-      url: `${url}${querystring.stringify(query)}`
-    }, (err, res, body) => {
-      if (!err && res.statusCode == 200) {
-        let json = JSON.parse(body).data;
+    })
+      .then(res => res.json())
+      .then(d => {
         if(raw){
-          resolve(json);
+          resolve(d.data);
         } else {
+          let json = d.data;
           let playlists = json.list.map(item => {
             return {
               id: item.dissid,
@@ -191,13 +171,11 @@ const searchPlaylist = (key, limit, page, raw) => {
           }
           resolve(obj);
         }
-      } else {
-        reject({
-          success: false,
-          message: err
-        });
-      }
-    })
+      })
+      .catch(err => reject({
+        success: false,
+        message: err
+      }))
   });
 }
 
@@ -219,18 +197,18 @@ const searchAlbum = (key, limit, page, raw) => {
     platform: 'yqq'
   };
   return new Promise((resolve, reject) => {
-    request({
+    fetch(`${url}${querystring.stringify(query)}`, {
       headers: {
         Referer: 'https://y.qq.com/portal/search.html',
         Host: 'c.y.qq.com'
-      },
-      url: `${url}${querystring.stringify(query)}`
-    }, (err, res, body) => {
-      if (!err && res.statusCode == 200) {
-        let json = JSON.parse(body).data.album;
+      }
+    })
+      .then(res => res.json())
+      .then(d => {
         if(raw){
-          resolve(json);
+          resolve(d.data);
         } else {
+          let json = d.data.album;
           let albumList = json.list.map(item => {
             return {
               id: item.albumMID,
@@ -249,13 +227,11 @@ const searchAlbum = (key, limit, page, raw) => {
           };
           resolve(obj);
         }
-      } else {
-        reject({
-          success: false,
-          message: err
-        });
-      }
-    })
+      })
+      .catch(err => reject({
+        success: false,
+        err: err || 'problem in search qq album, try query with raw=true'
+      }))
   });
 }
 
@@ -269,51 +245,42 @@ const getAlbum = (mid, raw) => {
     platform: 'yqq'
   };
   return new Promise((resolve, reject) => {
-    request({
+    fetch(`${url}${querystring.stringify(query)}`, {
       headers: {
         Referer: 'https://y.qq.com/portal/search.html',
         Host: 'c.y.qq.com'
       },
-      url: `${url}${querystring.stringify(query)}`
-    }, (err, res, body) => {
-      if (!err && res.statusCode == 200) {
+    })
+      .then(res => res.json())
+      .then(d => {
         if(raw){
-          resolve(JSON.parse(body));
+          resolve(d)
         }
-        try {
-          let ab = JSON.parse(body).data;
-          let songList = ab.list.map(item => {
-            return {
-              id: item.songmid,
-              name: item.songname,
-              artist: item.singer.map(i => {return{id: i.mid, name: i.name}})
-            }
-          });
-          let obj = {
-            success: true,
-            name: ab.name,
-            id: ab.mid,
-            cover: `https://y.gtimg.cn/music/photo_new/T002R300x300M000${ab.mid}.jpg`,
-            artist: {
-              name: ab.singername,
-              id: ab.singermid
-            },
-            songList: songList
-          };
-          resolve(obj);
-        } catch (e) {
-          reject({
-            success: false,
-            message: 'no album found with current id, please try with raw=true !'
-          })
-        }
-      } else {
-        reject({
-          success: false,
-          message: err
+        let ab = d.data;
+        let songList = ab.list.map(item => {
+          return {
+            id: item.songmid,
+            name: item.songname,
+            artist: item.singer.map(i => {return{id: i.mid, name: i.name}})
+          }
         });
-      }
-    });
+        let obj = {
+          success: true,
+          name: ab.name,
+          id: ab.mid,
+          cover: `https://y.gtimg.cn/music/photo_new/T002R300x300M000${ab.mid}.jpg`,
+          artist: {
+            name: ab.singername,
+            id: ab.singermid
+          },
+          songList: songList
+        };
+        resolve(obj);
+      })
+      .catch(err => reject({
+        success: false,
+        message: 'no qq album found with current id, please try with raw=true !'
+      }))
   });
 }
 
@@ -331,62 +298,66 @@ const getPlaylist = (disstid, raw) => {
     platform: 'yqq'
   };
   return new Promise((resolve, reject) => {
-    request({
+    fetch(`${url}${querystring.stringify(query)}`, {
       headers: {
         Referer: 'https://y.qq.com/portal/search.html',
         Host: 'c.y.qq.com'
       },
-      url: `${url}${querystring.stringify(query)}`
-    }, (err, res, body) => {
-      if (!err && res.statusCode == 200) {
-        if(body.substr(0, 12) === 'jsonCallback'){
-          body = body.substr(13);
-          body = body.substr(0, body.length - 1);
-        }
+    })
+      .then(res => res.text())
+      .then(text => {
+        text = text.substr(13);
+        text = text.substr(0, text.length - 1);
+        return Promise.resolve(JSON.parse(text));
+      })
+      .then(pl => {
         if(raw){
-          resolve(JSON.parse(body));
-        } else {
-          let pl = JSON.parse(body);
-          try {
-            let songList = pl.songlist.map(item => {
-              return {
-                id: item.songid,
-                name: item.songname,
-                artist: item.singer.map(i => {return{id: i.mid, name: i.name}}),
-                album: {
-                  id: item.albummid,
-                  cover: `https://y.gtimg.cn/music/photo_new/T002R300x300M000${item.albummid}.jpg`,
-                  name: item.albumname
-                }
-              }
-            });
-            let obj = {
-              success: true,
-              name: null,
-              id: pl.disstid,
-              cover: null,
-              author: {
-                id: null,
-                name: null,
-                avatar: null
-              },
-              songList: songList
-            };
-            resolve(obj);
-          } catch (e) {
-            reject({
-              success: false,
-              message: 'your qq playlist id is not correct or data mapping is not correct, try query with raw=true'
-            })
-          }
+          resolve(pl);
         }
-      } else {
-        reject({
-          success: false,
-          message: err || res.statusCode
+        let songList = pl.songlist.map(item => {
+          return {
+            id: item.songid,
+            name: item.songname,
+            artist: item.singer.map(i => {return{id: i.mid, name: i.name}}),
+            album: {
+              id: item.albummid,
+              cover: `https://y.gtimg.cn/music/photo_new/T002R300x300M000${item.albummid}.jpg`,
+              name: item.albumname
+            }
+          }
         });
-      }
-    });
+        let obj = {
+          success: true,
+          name: null,
+          id: pl.disstid,
+          cover: null,
+          author: {
+            id: null,
+            name: null,
+            avatar: null
+          },
+          songList: songList
+        };
+        resolve(obj);
+      })
+      .catch(err => reject({
+        success: false,
+        message: 'your qq playlist id is not correct or data mapping is not correct, try query with raw=true'
+      }))
+  });
+}
+
+//网页版搜索建议
+const searchSuggestion = (key) => {
+  let url = `https://c.y.qq.com/splcloud/fcgi-bin/smartbox_new.fcg?format=json&key=${key}&platform=yqq`;
+  return new Promise((resolve, reject) => {
+    fetch(url)
+      .then(res => res.json())
+      .then(json => resolve(json))
+      .catch(err => reject({
+        success: false,
+        message: err
+      }))
   });
 }
 

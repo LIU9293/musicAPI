@@ -1,11 +1,10 @@
 'use strict'
-const fetch = require('node-fetch');
 const querystring = require('querystring');
 const parseString = require('xml2js').parseString;
 const baseURL = 'http://api.xiami.com/web?';
 const NEW_API_URL = 'http://acs.m.xiami.com/h5/';
 const Crypto = require('./crypto');
-
+require('isomorphic-fetch');
 /*
  * this api is using by http://h.xiami.com, xiami's mobile site.
  * php version : https://github.com/metowolf/XiamiMusicAPI/blob/master/XiamiMusicAPI.php
@@ -13,6 +12,7 @@ const Crypto = require('./crypto');
 const xiamiFetch = (query) => {
   return new Promise((resolve, reject) => {
     fetch(`${baseURL}${querystring.stringify(query)}`, {
+      mode: 'no-cors',
       method: 'POST',
       headers: {
         cookie: 'user_from=2;XMPLAYER_addSongsToggler=0;XMPLAYER_isOpen=0;_xiamitoken=cb8bfadfe130abdbf5e2282c30f0b39a;',

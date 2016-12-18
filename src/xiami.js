@@ -4,7 +4,8 @@ const parseString = require('xml2js').parseString;
 const baseURL = 'http://api.xiami.com/web?';
 const NEW_API_URL = 'http://acs.m.xiami.com/h5/';
 const Crypto = require('./crypto');
-require('isomorphic-fetch');
+const fetch = require('node-fetch');
+
 /*
  * this api is using by http://h.xiami.com, xiami's mobile site.
  * php version : https://github.com/metowolf/XiamiMusicAPI/blob/master/XiamiMusicAPI.php

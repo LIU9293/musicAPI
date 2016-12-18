@@ -1,4 +1,8 @@
-# Centralized API for 网易云、虾米、QQ音乐
+# Centralized Node.js API for Netease, QQ, Xiami music
+
+> This SDK provide simple API interface based on Promise, netease API is get
+from github, qq api is get from y.qq.com and xiami api is get from xiami Mac App.
+ Please make no commerical use of this project.
 
 ```
 npm install music-api --save
@@ -17,54 +21,88 @@ musicAPI.searchSong('netease', {
 
 ```
 
-## 功能列表
- - [x] 搜索网易云、QQ音乐、虾米曲目
- - [x] 搜索网易云、QQ音乐、虾米歌单(精选集)
- - [x] 搜索网易云、QQ音乐、虾米专辑
- - [x] 获取网易云、QQ音乐、虾米曲目播放地址
- - [x] 获取网易云、QQ音乐、虾米歌单详情
- - [x] 获取网易云、QQ音乐、虾米专辑详情
- - [ ] 获取网易云、QQ音乐、虾米推荐
- - [ ] 获取网易云、QQ音乐、虾米歌手详情
- - [ ] 浏览器支持
+## Run local
+```shell
+git clone https://github.com/LIU9293/musicAPI.git
+cd musicAPI
+npm install
+npm run test
+
+open browser: localhost:8080/search/song/all?key=林海
+
+```
+
+## Usage
+ - [x] search songs.
+ - [x] search playlist.(xiami collects)
+ - [x] search albums.
+ - [x] get song play url.
+ - [x] get playlist detail.
+ - [x] get album detail.
+ - [ ] get daily suggestions.
+ - [ ] get artists' detail.
+ - [x] raw data / converted data available.
 
 ## API
-```javascript
-vendor = ONE OF ['netease', 'xiami', 'qq', 'all'];
-query = {
-  key: KEY, /* must provide */
-  limit: 10,
-  page: 1,
-  raw: Bool, true or false /* set true to get raw data from each vendor, default is false */
-})
-```
+
  - **musicAPI.searchSong(vendor, query)**
 
-   查找歌曲,[http://118.178.190.101:2345/search/song/netease?key=刘瑞琦&limit=5&page=1](http://118.178.190.101:2345/search/song/netease?key=刘瑞琦&limit=5&page=1)
+   - vendor: one if ['netease', 'xiami', 'qq', 'all'];
+   - query: {
+     key: KEY,
+     limit: 10,
+     page: 1,
+     raw: true or false
+   }
+
+   example: [http://118.178.190.101:2345/search/song/netease?key=刘瑞琦&limit=5&page=1](http://118.178.190.101:2345/search/song/netease?key=刘瑞琦&limit=5&page=1)
 
  - **musicAPI.searchAlbum(vendor, query)**
 
-   查找专辑,[http://118.178.190.101:2345/search/album/xiami?key=范宗沛&limit=5&page=1](http://118.178.190.101:2345/search/album/xiami?key=范宗沛&limit=5&page=1)
+   - vendor: one if ['netease', 'xiami', 'qq', 'all'];
+   - query: {
+     key: KEY,
+     limit: 10,
+     page: 1,
+     raw: true or false
+   }
+
+   example: [http://118.178.190.101:2345/search/album/xiami?key=范宗沛&limit=5&page=1](http://118.178.190.101:2345/search/album/xiami?key=范宗沛&limit=5&page=1)
 
  - **musicAPI.searchPlaylist(vendor, query)**
 
-   查找歌单（虾米精选集、QQ歌单）,[http://118.178.190.101:2345/search/playlist/qq?key=周杰伦&limit=5&page=1](http://118.178.190.101:2345/search/playlist/qq?key=周杰伦&limit=5&page=1)
+   - vendor: one if ['netease', 'xiami', 'qq', 'all'];
+   - query: {
+     key: KEY,
+     limit: 10,
+     page: 1,
+     raw: true or false
+   }
 
-```javascript
-vendor = ONE OF ['netease', 'xiami', 'qq'];
-query = {
- id: id /* songID / albumID / playlistID search from above, must provide */
- raw: Bool, true or false /* set true to get raw data from each vendor, default is false */
-})
-```
+   example: [http://118.178.190.101:2345/search/playlist/qq?key=周杰伦&limit=5&page=1](http://118.178.190.101:2345/search/playlist/qq?key=周杰伦&limit=5&page=1)
+
  - **musicAPI.getSong(vendor, query)** (not work with raw now, keep it false)
 
-   获得歌曲播放URL,[http://118.178.190.101:2345/get/song/qq?id=003OUlho2HcRHC](http://118.178.190.101:2345/get/song/qq?id=003OUlho2HcRHC)
+   - vendor: one of ['netease', 'xiami', 'qq'];
+   - query: {
+     id: songID,
+     raw: true or false
+   }
+
+   example: [http://118.178.190.101:2345/get/song/qq?id=003OUlho2HcRHC](http://118.178.190.101:2345/get/song/qq?id=003OUlho2HcRHC)
 
  - **musicAPI.getAlbum(vendor, query)**
 
-   获得专辑详情
+   - vendor: one of ['netease', 'xiami', 'qq'];
+   - query: {
+     id: albumID,
+     raw: true or false
+   }
 
  - **musicAPI.getPlaylist(vendor, query)**
 
-   获得歌单详情
+   - vendor: one of ['netease', 'xiami', 'qq'];
+   - query: {
+     id: playlistID,
+     raw: true or false
+   }

@@ -55,7 +55,7 @@ open browser: localhost:8080/search/song/all?key=林海
      raw: true or false
    }
 
-   example: [http://118.178.190.101:2345/search/song/netease?key=刘瑞琦&limit=5&page=1](http://118.178.190.101:2345/search/song/netease?key=刘瑞琦&limit=5&page=1)
+   example: [http://118.178.190.101/api/search/song/netease?key=刘瑞琦&limit=5&page=1](http://118.178.190.101/api/search/song/netease?key=刘瑞琦&limit=5&page=1)
 
  - **musicAPI.searchAlbum(vendor, query)**
 
@@ -67,7 +67,7 @@ open browser: localhost:8080/search/song/all?key=林海
      raw: true or false
    }
 
-   example: [http://118.178.190.101:2345/search/album/xiami?key=范宗沛&limit=5&page=1](http://118.178.190.101:2345/search/album/xiami?key=范宗沛&limit=5&page=1)
+   example: [http://118.178.190.101/api/search/album/xiami?key=范宗沛&limit=5&page=1](http://118.178.190.101/api/search/album/xiami?key=范宗沛&limit=5&page=1)
 
  - **musicAPI.searchPlaylist(vendor, query)**
 
@@ -79,7 +79,7 @@ open browser: localhost:8080/search/song/all?key=林海
      raw: true or false
    }
 
-   example: [http://118.178.190.101:2345/search/playlist/qq?key=周杰伦&limit=5&page=1](http://118.178.190.101:2345/search/playlist/qq?key=周杰伦&limit=5&page=1)
+   example: [http://118.178.190.101/api/search/playlist/qq?key=周杰伦&limit=5&page=1](http://118.178.190.101/api/search/playlist/qq?key=周杰伦&limit=5&page=1)
 
  - **musicAPI.getSong(vendor, query)** (not work with raw now, keep it false)
 
@@ -89,7 +89,7 @@ open browser: localhost:8080/search/song/all?key=林海
      raw: true or false
    }
 
-   example: [http://118.178.190.101:2345/get/song/qq?id=003OUlho2HcRHC](http://118.178.190.101:2345/get/song/qq?id=003OUlho2HcRHC)
+   example: [http://118.178.190.101/api/get/song/qq?id=003OUlho2HcRHC](http://118.178.190.101/api/get/song/qq?id=003OUlho2HcRHC)
 
  - **musicAPI.getAlbum(vendor, query)**
 

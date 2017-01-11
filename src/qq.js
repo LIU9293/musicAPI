@@ -261,7 +261,7 @@ const getAlbum = (mid, raw) => {
           return {
             id: item.songmid,
             name: item.songname,
-            artist: item.singer.map(i => {return{id: i.mid, name: i.name}})
+            artists: item.singer.map(i => {return{id: i.mid, name: i.name}})
           }
         });
         let obj = {

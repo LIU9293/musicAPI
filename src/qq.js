@@ -30,7 +30,7 @@ const getSongNew = (mid, sizekey) => {
         } else if(sizekey === 'size320'){
           perfix = 'M800';
         }
-        let url = `http://dl.stream.qqmusic.qq.com/${perfix}${mid}.mp3?vkey=${key}&guid=${guid}&fromtag=30`;
+        let url = `https://dl.stream.qqmusic.qq.com/${perfix}${mid}.mp3?vkey=${key}&guid=${guid}&fromtag=30`;
         resolve({
           success: true,
           url: url
@@ -62,7 +62,7 @@ const generateKey = (mid) => {
       })
       .catch(err => reject({
         success: false,
-        message: 'no song is found with current id, play check qq song id'
+        message: 'QQ - 歌曲需要付费或者ID错误!'
       }))
   });
 }

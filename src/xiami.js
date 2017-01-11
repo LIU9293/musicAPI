@@ -175,7 +175,7 @@ const getSong = (id, raw) => {
       })
       .catch(err => reject({
         success: false,
-        message: 'error get xiami song, please check the id !'
+        message: '虾米 - 歌曲需要付费或者ID错误!'
       }))
   });
 }

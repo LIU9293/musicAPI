@@ -172,7 +172,7 @@ const getSong = (id, raw) => {
         if(!res.data[0].url){
           reject({
             success: false,
-            message: 'no match id found ! '
+            message: '网易 - 歌曲需要付费或者ID错误!'
           })
         }
         resolve({
@@ -182,7 +182,7 @@ const getSong = (id, raw) => {
       })
       .catch(err => reject({
         success: false,
-        message: err
+        message: '网易 - 歌曲需要付费或者ID错误!'
       }))
   });
 }

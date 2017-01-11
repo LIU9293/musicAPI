@@ -137,6 +137,7 @@ const getSong = (id, raw) => {
     fetch(`http://www.xiami.com/song/playlist/id/${id}`)
       .then(res => res.text())
       .then(xml => {
+        console.log(xml);
         parseString(xml, (err, res) => {
           if(err){
             reject({
@@ -368,10 +369,10 @@ const getAlbum = (id, raw) => {
           return {
             id: item.songId,
             name: item.songName,
-            artist: {
+            artists: [{
               id: item.artistId,
               name: item.artistName
-            }
+            }]
           }
         });
         let obj = {
@@ -420,10 +421,10 @@ const getPlaylist = (id, raw) => {
           return {
             id: item.songId,
             name: item.songName,
-            artist: {
+            artists: [{
               name: item.artistName,
               id: item.artistId
-            },
+            }],
             album: {
               id: item.albumId,
               cover: item.albumLogo,

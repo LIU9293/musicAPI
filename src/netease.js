@@ -203,7 +203,7 @@ const getAlbum = (id, raw) => {
           return {
             id: item.id,
             name: item.name,
-            artist: item.ar
+            artists: item.ar
           }
         });
         let obj = {
@@ -244,7 +244,7 @@ const getPlaylist = (id, raw) => {
             return {
               id: item.id,
               name: item.name,
-              artist: item.ar,
+              artists: item.ar,
               album: {
                 id: item.al.id,
                 cover: item.al.picUrl,

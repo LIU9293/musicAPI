@@ -316,9 +316,9 @@ const getPlaylist = (disstid, raw) => {
         }
         let songList = pl.songlist.map(item => {
           return {
-            id: item.songid,
+            id: item.songmid,
             name: item.songname,
-            artist: item.singer.map(i => {return{id: i.mid, name: i.name}}),
+            artists: item.singer.map(i => {return{id: i.mid, name: i.name}}),
             album: {
               id: item.albummid,
               cover: `https://y.gtimg.cn/music/photo_new/T002R300x300M000${item.albummid}.jpg`,

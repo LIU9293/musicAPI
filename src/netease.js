@@ -242,18 +242,19 @@ const getPlaylist = (id, raw) => {
     NeteaseRequest(`/v3/playlist/detail?csrf_token=`, encData)
       .then(res => {
         try {
-          let songList = res.playlist.tracks.map(item => {
+          let songList = res.playlist.tracks.map((item, index) => {
             return {
               id: item.id,
               name: item.name,
               artists: item.ar,
               needPay: item.fee > 0 ? true : false,
+              offlineNow: res.privileges[index].cp === 0 ? true : false,
               album: {
                 id: item.al.id,
                 cover: item.al.picUrl.replace('http://', 'https://'),
                 name: item.al.name
               }
-            }
+            };
           });
           let obj = {
             success: true,

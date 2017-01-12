@@ -262,7 +262,7 @@ const getAlbum = (mid, raw) => {
           return {
             id: item.songmid,
             name: item.songname,
-            needPay: item.pay.payplay,
+            needPay: item.pay.payplay > 0 ? true : false,
             artists: item.singer.map(i => {return{id: i.mid, name: i.name}})
           }
         });
@@ -321,7 +321,7 @@ const getPlaylist = (disstid, raw) => {
             id: item.songmid,
             name: item.songname,
             artists: item.singer.map(i => {return{id: i.mid, name: i.name}}),
-            needPay: item.pay.payplay,
+            needPay: item.pay.payplay > 0 ? true : false,
             album: {
               id: item.albummid,
               cover: `https://y.gtimg.cn/music/photo_new/T002R300x300M000${item.albummid}.jpg`,

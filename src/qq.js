@@ -30,7 +30,7 @@ const getSongNew = (mid, sizekey) => {
         } else if(sizekey === 'size320'){
           perfix = 'M800';
         }
-        let url = `https://dl.stream.qqmusic.qq.com/${perfix}${mid}.mp3?vkey=${key}&guid=${guid}&fromtag=30`;
+        let url = `http://dl.stream.qqmusic.qq.com/${perfix}${mid}.mp3?vkey=${key}&guid=${guid}&fromtag=30`;
         resolve({
           success: true,
           url: url
@@ -156,7 +156,7 @@ const searchPlaylist = (key, limit, page, raw) => {
           let playlists = json.list.map(item => {
             return {
               id: item.dissid,
-              cover: item.imgurl,
+              cover: item.imgurl.replace('http://', 'https://'),
               name: S(item.dissname).decodeHTMLEntities().stripTags().s,
               author: {
                 name: item.creator.name,

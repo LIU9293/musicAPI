@@ -50,13 +50,14 @@ const searchSong = (key, limit, page, raw) => {
                 album: {
                   id: item.al.id,
                   name: item.al.name,
-                  cover: item.al.picUrl
+                  cover: item.al.picUrl.replace('http://', 'https://'),
                 },
                 // [{id: , name: }]
                 artists: item.ar,
                 name: item.name,
                 id: item.id,
-              }
+                needPay: item.fee > 0 ? true :false,
+              };
             });
           }
           let obj = {
@@ -90,7 +91,7 @@ const searchPlaylist = (key, limit, page, raw) => {
           let playlists = res.result.playlists.map(item => {
             return {
               id: item.id,
-              cover: item.coverImgUrl,
+              cover: item.coverImgUrl.replace('http://', 'https://'),
               name: item.name,
               author: {
                 name: item.creator.nickname,
@@ -131,7 +132,7 @@ const searchAlbum = (key, limit, page, raw) => {
           let albumList = res.result.albums.map(item => {
             return {
               id: item.id,
-              cover: item.picUrl,
+              cover: item.picUrl.replace('http://', 'https://'),
               name: item.name,
               artist: {
                 name: item.artist.name,
@@ -203,6 +204,7 @@ const getAlbum = (id, raw) => {
           return {
             id: item.id,
             name: item.name,
+            needPay: item.fee > 0 ? true : false,
             artists: item.ar
           }
         });
@@ -210,7 +212,7 @@ const getAlbum = (id, raw) => {
           success: true,
           name: res.album.name,
           id: res.album.id,
-          cover: res.album.picUrl,
+          cover: res.album.picUrl.replace('http://', 'https://'),
           artist: {
             name: res.album.artist.name,
             id: res.album.artist.id
@@ -245,9 +247,10 @@ const getPlaylist = (id, raw) => {
               id: item.id,
               name: item.name,
               artists: item.ar,
+              needPay: item.fee > 0 ? true : false,
               album: {
                 id: item.al.id,
-                cover: item.al.picUrl,
+                cover: item.al.picUrl.replace('http://', 'https://'),
                 name: item.al.name
               }
             }

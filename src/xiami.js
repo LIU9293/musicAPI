@@ -45,15 +45,18 @@ const searchSong = (key, limit, page, raw) => {
               album: {
                 id: item.album_id,
                 name: item.album_name,
-                cover: item.album_logo
+                cover: item.album_logo.replace('http', 'https'),
               },
               artists: [{
                 id: item.artist_id,
-                name: item.artist_name
+                name: item.artist_name,
+                avatar: item.artist_logo,
               }],
               name: item.song_name,
-              id: item.song_id
-            }
+              id: item.song_id,
+              needPay: item.need_pay_flag > 0 ? true : false,
+              file: item.listen_file,
+            };
           });
           let obj = {
             success: true,
@@ -65,7 +68,7 @@ const searchSong = (key, limit, page, raw) => {
         .catch(err => reject({
           success: false,
           message: err
-        }))
+        }));
     });
   }
   return xiamiFetch({
@@ -278,7 +281,7 @@ const searchPlaylist = (key, limit, page, raw) => {
           let playlists = res.data.data.collects.map(item => {
             return {
               id: item.listId,
-              cover: item.collectLogo,
+              cover: item.collectLogo.replace('http://', 'https://'),
               name: item.collectName,
               author: {
                 name: item.userName,
@@ -323,8 +326,9 @@ const searchAlbum = (key, limit, page, raw) => {
           let albumList = res.data.data.albums.map(item => {
             return {
               id: item.albumId,
-              cover: item.albumLogo,
+              cover: item.albumLogo.replace('http://', 'https://'),
               name: item.albumName,
+              needPay: item.price/1 > 0 ? true : false,
               artist: {
                 name: item.artistName,
                 id: item.artistId
@@ -366,20 +370,31 @@ const getAlbum = (id, raw) => {
       .then(res => {
         let ab = res.data.data.albumDetail;
         let songList = ab.songs.map(item => {
+          let file = '';
+          for(let i = 0; i<item.listenFiles.length; i++){
+            if(item.listenFiles[i].format === 'mp3'){
+              file = item.listenFiles[i].listenFile;
+              if(item.listenFiles[i].quality === 'l'){
+                break;
+              }
+            }
+          }
           return {
             id: item.songId,
             name: item.songName,
             artists: [{
               id: item.artistId,
               name: item.artistName
-            }]
-          }
+            }],
+            needPay: ab.price/1 > 0 ? true : false,
+            file,
+          };
         });
         let obj = {
           success: true,
           name: ab.albumName,
           id: ab.albumId,
-          cover: ab.albumLogoM,
+          cover: ab.albumLogoM.replace('http://', 'https://'),
           artist: {
             name: ab.artistName,
             id: ab.artistId
@@ -418,12 +433,24 @@ const getPlaylist = (id, raw) => {
       .then(res => {
         let pl = res.data.data.collectDetail;
         let songList = pl.songs.map(item => {
+          let file = '';
+          for(let i = 0; i<item.listenFiles.length; i++){
+            if(item.listenFiles[i].format === 'mp3'){
+              file = item.listenFiles[i].listenFile;
+              if(item.listenFiles[i].quality === 'l'){
+                break;
+              }
+            }
+          }
           return {
             id: item.songId,
             name: item.songName,
+            needPay: item.needPayFlag > 0 ? true : false,
+            file,
             artists: [{
               name: item.artistName,
-              id: item.artistId
+              id: item.artistId,
+              avatar: item.artistLogo,
             }],
             album: {
               id: item.albumId,
@@ -436,7 +463,7 @@ const getPlaylist = (id, raw) => {
           success: true,
           name: pl.collectName,
           id: pl.listId,
-          cover: pl.collectLogoMiddle,
+          cover: pl.collectLogoMiddle.replace('http://', 'https://'),
           author: {
             id: pl.userId,
             name: pl.userName,

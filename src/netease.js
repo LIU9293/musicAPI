@@ -205,7 +205,7 @@ const getAlbum = (id, raw) => {
             id: item.id,
             name: item.name,
             needPay: item.fee > 0 ? true : false,
-            offlineNow: item.privilege.cp === 0 && item.fee === 0 ? true : false,
+            offlineNow: item.privilege.st < 0 ? true : false,
             artists: item.ar
           }
         });
@@ -249,7 +249,7 @@ const getPlaylist = (id, raw) => {
               name: item.name,
               artists: item.ar,
               needPay: item.fee > 0 ? true : false,
-              offlineNow: res.privileges[index].cp === 0 ? true : false,
+              offlineNow: res.privileges[index].st < 0 ? true : false,
               album: {
                 id: item.al.id,
                 cover: item.al.picUrl.replace('http://', 'https://'),

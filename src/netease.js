@@ -205,7 +205,7 @@ const getAlbum = (id, raw) => {
             id: item.id,
             name: item.name,
             needPay: item.fee > 0 ? true : false,
-            offlineNow: item.privilege.cp === 0 ? true : false,
+            offlineNow: item.privilege.cp === 0 && item.fee === 0 ? true : false,
             artists: item.ar
           }
         });

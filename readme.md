@@ -4,6 +4,8 @@
 from github, qq api is get from y.qq.com and xiami api is get from xiami Mac App.
  Please make no commerical use of this project.
 
+Go to [musicafe.co](https://musicafe.co) as a production example!
+
 ```
 npm install music-api --save
 ```
@@ -47,62 +49,72 @@ open browser: localhost:8080/search/song/all?key=林海
 
  - **musicAPI.searchSong(vendor, query)**
 
-   - vendor: one if ['netease', 'xiami', 'qq', 'all'];
-   - query: {
+   ```
+   vendor: one if ['netease', 'xiami', 'qq', 'all'];
+   query: {
      key: KEY,
      limit: 10,
      page: 1,
      raw: true or false
    }
-
-   example: [http://118.178.190.101/api/search/song/netease?key=刘瑞琦&limit=5&page=1](http://118.178.190.101/api/search/song/netease?key=刘瑞琦&limit=5&page=1)
+   ```
+   example: [https://musicafe.co/api/search/song/netease?key=刘瑞琦&limit=5&page=1](https://musicafe.co/api/search/song/netease?key=刘瑞琦&limit=5&page=1)
 
  - **musicAPI.searchAlbum(vendor, query)**
 
-   - vendor: one if ['netease', 'xiami', 'qq', 'all'];
-   - query: {
+   ``` 
+   vendor: one if ['netease', 'xiami', 'qq', 'all'];
+   query: {
      key: KEY,
      limit: 10,
      page: 1,
      raw: true or false
    }
-
-   example: [http://118.178.190.101/api/search/album/xiami?key=范宗沛&limit=5&page=1](http://118.178.190.101/api/search/album/xiami?key=范宗沛&limit=5&page=1)
+   ```
+   example: [https://musicafe.co/api/search/album/xiami?key=范宗沛&limit=5&page=1](https://musicafe.co/api/search/album/xiami?key=范宗沛&limit=5&page=1)
 
  - **musicAPI.searchPlaylist(vendor, query)**
 
-   - vendor: one if ['netease', 'xiami', 'qq', 'all'];
-   - query: {
+   ```
+   vendor: one if ['netease', 'xiami', 'qq', 'all'];
+   query: {
      key: KEY,
      limit: 10,
      page: 1,
      raw: true or false
    }
-
-   example: [http://118.178.190.101/api/search/playlist/qq?key=周杰伦&limit=5&page=1](http://118.178.190.101/api/search/playlist/qq?key=周杰伦&limit=5&page=1)
+   ```
+   example: [https://musicafe.co/api/search/playlist/qq?key=周杰伦&limit=5&page=1](https://musicafe.co/api/search/playlist/qq?key=周杰伦&limit=5&page=1)
 
  - **musicAPI.getSong(vendor, query)** (not work with raw now, keep it false)
 
-   - vendor: one of ['netease', 'xiami', 'qq'];
-   - query: {
+   ```
+   vendor: one of ['netease', 'xiami', 'qq'];
+   query: {
      id: songID,
      raw: true or false
    }
-
-   example: [http://118.178.190.101/api/get/song/qq?id=003OUlho2HcRHC](http://118.178.190.101/api/get/song/qq?id=003OUlho2HcRHC)
+   ```
+   example: [https://musicafe.co/api/get/song/qq?id=003OUlho2HcRHC](https://musicafe.co/api/get/song/qq?id=003OUlho2HcRHC)
 
  - **musicAPI.getAlbum(vendor, query)**
 
-   - vendor: one of ['netease', 'xiami', 'qq'];
-   - query: {
+   ```
+   vendor: one of ['netease', 'xiami', 'qq'];
+   query: {
      id: albumID,
      raw: true or false
    }
+   ```
+   example: [https://musicafe.co/api/get/album/qq?id=002J7XNt2m9sNc](https://musicafe.co/api/get/album/qq?id=002J7XNt2m9sNc)
 
  - **musicAPI.getPlaylist(vendor, query)**
 
-   - vendor: one of ['netease', 'xiami', 'qq'];
-   - query: {
+   ```
+   vendor: one of ['netease', 'xiami', 'qq'];
+   query: {
      id: playlistID,
      raw: true or false
    }
+   ```
+   example: [https://musicafe.co/api/get/playlist/netease?id=461600464](https://musicafe.co/api/get/playlist/netease?id=461600464)

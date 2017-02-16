@@ -50,7 +50,8 @@ const searchSong = (key, limit, page, raw) => {
                 album: {
                   id: item.al.id,
                   name: item.al.name,
-                  cover: item.al.picUrl.replace('http://', 'https://'),
+                  cover: item.al.picUrl.replace('http://', 'https://') + '?param=250y250',
+                  coverSmall: item.al.picUrl.replace('http://', 'https://') + '?param=140y140',
                 },
                 // [{id: , name: }]
                 artists: item.ar,
@@ -91,14 +92,15 @@ const searchPlaylist = (key, limit, page, raw) => {
           let playlists = res.result.playlists.map(item => {
             return {
               id: item.id,
-              cover: item.coverImgUrl.replace('http://', 'https://'),
+              cover: item.coverImgUrl.replace('http://', 'https://') + '?param=250y250',
+              coverSmall: item.coverImgUrl.replace('http://', 'https://') + '?param=140y140',
               name: item.name,
               author: {
                 name: item.creator.nickname,
                 id: item.creator.userId,
                 // @important: no avatar here
                 avatar: null
-              }
+              },
             }
           });
           let obj = {
@@ -132,12 +134,13 @@ const searchAlbum = (key, limit, page, raw) => {
           let albumList = res.result.albums.map(item => {
             return {
               id: item.id,
-              cover: item.picUrl.replace('http://', 'https://'),
+              cover: item.picUrl.replace('http://', 'https://') + '?param=250y250',
+              coverSmall: item.picUrl.replace('http://', 'https://') + '?param=140y140',
               name: item.name,
               artist: {
                 name: item.artist.name,
                 id: item.artist.id
-              }
+              },
             }
           });
           let obj = {
@@ -206,14 +209,23 @@ const getAlbum = (id, raw) => {
             name: item.name,
             needPay: item.fee > 0 ? true : false,
             offlineNow: item.privilege.st < 0 ? true : false,
-            artists: item.ar
+            artists: item.ar,
+            album: {
+              id: res.album.id,
+              name: res.album.name,
+              cover: res.album.picUrl.replace('http://', 'https://') + '?param=250y250',
+              coverSmall: res.album.picUrl.replace('http://', 'https://') + '?param=140y140',
+            }
           }
         });
         let obj = {
           success: true,
           name: res.album.name,
           id: res.album.id,
-          cover: res.album.picUrl.replace('http://', 'https://'),
+          cover: res.album.picUrl.replace('http://', 'https://') + '?param=250y250',
+          coverSmall: res.album.picUrl.replace('http://', 'https://') + '?param=140y140',
+          needPay: songList[0],needPay,
+          offlineNow: songList[0],offlineNow,
           artist: {
             name: res.album.artist.name,
             id: res.album.artist.id
@@ -252,7 +264,8 @@ const getPlaylist = (id, raw) => {
               offlineNow: res.privileges[index].st < 0 ? true : false,
               album: {
                 id: item.al.id,
-                cover: item.al.picUrl.replace('http://', 'https://'),
+                cover: item.al.picUrl.replace('http://', 'https://') + '?param=250y250',
+                coverSmall: item.al.picUrl.replace('http://', 'https://') + '?param=140y140',
                 name: item.al.name
               }
             };

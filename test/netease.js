@@ -1,5 +1,5 @@
-var {getURLfromFid} = require('../src/netease');
+var {getAlbum} = require('../src/netease');
 
-var url = getURLfromFid("29572501");
+var url = getAlbum("3029801", false);
 
 console.log(url);

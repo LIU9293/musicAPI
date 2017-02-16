@@ -224,8 +224,8 @@ const getAlbum = (id, raw) => {
           id: res.album.id,
           cover: res.album.picUrl.replace('http://', 'https://') + '?param=250y250',
           coverSmall: res.album.picUrl.replace('http://', 'https://') + '?param=140y140',
-          needPay: songList[0],needPay,
-          offlineNow: songList[0],offlineNow,
+          needPay: songList[0].needPay,
+          offlineNow: songList[0].offlineNow,
           artist: {
             name: res.album.artist.name,
             id: res.album.artist.id

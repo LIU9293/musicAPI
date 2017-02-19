@@ -51,6 +51,7 @@ const searchSong = (key, limit, page, raw) => {
                   id: item.al.id,
                   name: item.al.name,
                   cover: item.al.picUrl.replace('http://', 'https://') + '?param=250y250',
+                  coverBig: item.al.picUrl.replace('http://', 'https://') + '?param=400y400',
                   coverSmall: item.al.picUrl.replace('http://', 'https://') + '?param=140y140',
                 },
                 // [{id: , name: }]
@@ -93,6 +94,7 @@ const searchPlaylist = (key, limit, page, raw) => {
             return {
               id: item.id,
               cover: item.coverImgUrl.replace('http://', 'https://') + '?param=250y250',
+              coverBig: item.coverImgUrl.replace('http://', 'https://') + '?param=400y400',
               coverSmall: item.coverImgUrl.replace('http://', 'https://') + '?param=140y140',
               name: item.name,
               author: {
@@ -135,6 +137,7 @@ const searchAlbum = (key, limit, page, raw) => {
             return {
               id: item.id,
               cover: item.picUrl.replace('http://', 'https://') + '?param=250y250',
+              coverBig: item.picUrl.replace('http://', 'https://') + '?param=400y400',
               coverSmall: item.picUrl.replace('http://', 'https://') + '?param=140y140',
               name: item.name,
               artist: {
@@ -214,6 +217,7 @@ const getAlbum = (id, raw) => {
               id: res.album.id,
               name: res.album.name,
               cover: res.album.picUrl.replace('http://', 'https://') + '?param=250y250',
+              coverBig: res.album.picUrl.replace('http://', 'https://') + '?param=400y400',
               coverSmall: res.album.picUrl.replace('http://', 'https://') + '?param=140y140',
             }
           }
@@ -223,6 +227,7 @@ const getAlbum = (id, raw) => {
           name: res.album.name,
           id: res.album.id,
           cover: res.album.picUrl.replace('http://', 'https://') + '?param=250y250',
+          coverBig: res.album.picUrl.replace('http://', 'https://') + '?param=400y400',
           coverSmall: res.album.picUrl.replace('http://', 'https://') + '?param=140y140',
           needPay: songList[0].needPay,
           offlineNow: songList[0].offlineNow,
@@ -265,6 +270,7 @@ const getPlaylist = (id, raw) => {
               album: {
                 id: item.al.id,
                 cover: item.al.picUrl.replace('http://', 'https://') + '?param=250y250',
+                coverBig: item.al.picUrl.replace('http://', 'https://') + '?param=400y400',
                 coverSmall: item.al.picUrl.replace('http://', 'https://') + '?param=140y140',
                 name: item.al.name
               }

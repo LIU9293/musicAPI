@@ -46,7 +46,8 @@ const searchSong = (key, limit, page, raw) => {
                 id: item.album_id,
                 name: item.album_name,
                 cover: item.album_logo.replace('http', 'https').replace('1.jpg', '2.jpg'),
-                coverSmall: item.album_logo.replace('http', 'https')
+                coverBig: item.album_logo.replace('http', 'https').replace('1.jpg', '2.jpg'),
+                coverSmall: item.album_logo.replace('http', 'https'),
               },
               artists: [{
                 id: item.artist_id,
@@ -283,6 +284,7 @@ const searchPlaylist = (key, limit, page, raw) => {
             return {
               id: item.listId,
               cover: item.collectLogo.replace('http://', 'https://') + '@!c-185-185',
+              coverBig: item.collectLogo.replace('http://', 'https://') + '@!c-185-185',
               coverSmall: item.collectLogo.replace('http://', 'https://') + '@!c-185-185',
               name: item.collectName,
               author: {
@@ -329,6 +331,7 @@ const searchAlbum = (key, limit, page, raw) => {
             return {
               id: item.albumId,
               cover: item.albumLogo.replace('http://', 'https://') + '@1e_1c_0i_1o_100Q_250w_250h',
+              coverBig: item.albumLogo.replace('http://', 'https://') + '@1e_1c_0i_1o_100Q_400w_400h',
               coverSmall: item.albumLogo.replace('http://', 'https://') + '@1e_1c_0i_1o_100Q_150w_150h',
               name: item.albumName,
               needPay: item.price/1 > 0 ? true : false,
@@ -393,6 +396,7 @@ const getAlbum = (id, raw) => {
               name: ab.albumName,
               id: ab.albumId,
               cover: ab.albumLogo.replace('http://', 'https://') + '@1e_1c_0i_1o_100Q_250w_250h',
+              coverBig: ab.albumLogo.replace('http://', 'https://') + '@1e_1c_0i_1o_100Q_400w_400h',
               coverSmall: ab.albumLogo.replace('http://', 'https://') + '@1e_1c_0i_1o_100Q_150w_150h',
             },
             needPay: ab.price/1 > 0 ? true : false,
@@ -404,6 +408,7 @@ const getAlbum = (id, raw) => {
           name: ab.albumName,
           id: ab.albumId,
           cover: ab.albumLogo.replace('http://', 'https://') + '@1e_1c_0i_1o_100Q_250w_250h',
+          coverBig: ab.albumLogo.replace('http://', 'https://') + '@1e_1c_0i_1o_100Q_400w_400h',
           coverSmall: ab.albumLogo.replace('http://', 'https://') + '@1e_1c_0i_1o_100Q_150w_150h',
           artist: {
             name: ab.artistName,
@@ -465,6 +470,7 @@ const getPlaylist = (id, raw) => {
             album: {
               id: item.albumId,
               cover: item.albumLogo.replace('http://', 'https://') + '@0e_0c_0i_1o_100Q_250w',
+              coverBig: item.albumLogo.replace('http://', 'https://') + '@0e_0c_0i_1o_100Q_400w',
               coverSmall: item.albumLogo.replace('http://', 'https://') + '@0e_0c_0i_1o_100Q_150w',
               name: item.albumName
             }
@@ -475,6 +481,7 @@ const getPlaylist = (id, raw) => {
           name: pl.collectName,
           id: pl.listId,
           cover: pl.collectLogo.replace('http://', 'https://') + '@0e_0c_0i_1o_100Q_250w',
+          coverBig: pl.collectLogo.replace('http://', 'https://') + '@0e_0c_0i_1o_100Q_400w',
           coverSmall: pl.collectLogo.replace('http://', 'https://') + '@0e_0c_0i_1o_100Q_150w',
           author: {
             id: pl.userId,
@@ -508,5 +515,6 @@ module.exports = {
   searchAlbum: searchAlbum,
   getSong: getSong,
   getAlbum: getAlbum,
-  getPlaylist: getPlaylist
+  getPlaylist: getPlaylist,
+  getDailySuggest: getDailySuggest,
 };

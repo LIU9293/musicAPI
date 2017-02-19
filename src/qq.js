@@ -101,6 +101,7 @@ const searchSong = (key, limit, page, raw) => {
                 album: {
                   id: item.albumid,
                   cover: `https://y.gtimg.cn/music/photo_new/T002R300x300M000${item.albummid}.jpg`,
+                  coverBig: `https://y.gtimg.cn/music/photo_new/T002R500x500M000${item.albummid}.jpg`,
                   coverSmall: `https://y.gtimg.cn/music/photo_new/T002R150x150M000${item.albummid}.jpg`,
                   name: item.albumname
                 },
@@ -159,6 +160,7 @@ const searchPlaylist = (key, limit, page, raw) => {
             return {
               id: item.dissid,
               cover: originCover.substr(0, originCover.length - 4) + '/300',
+              coverBig: originCover.substr(0, originCover.length - 4) + '/600',
               coverSmall: originCover.substr(0, originCover.length - 4) + '/150',
               name: S(item.dissname).decodeHTMLEntities().stripTags().s,
               author: {
@@ -217,6 +219,7 @@ const searchAlbum = (key, limit, page, raw) => {
             return {
               id: item.albumMID,
               cover: `https://y.gtimg.cn/music/photo_new/T002R300x300M000${item.albumMID}.jpg`,
+              coverBig: `https://y.gtimg.cn/music/photo_new/T002R500x500M000${item.albumMID}.jpg`,
               coverSmall: `https://y.gtimg.cn/music/photo_new/T002R150x150M000${item.albumMID}.jpg`,
               name: item.albumName,
               artist: {
@@ -272,6 +275,7 @@ const getAlbum = (mid, raw) => {
               name: ab.name,
               id: ab.mid,
               cover: `https://y.gtimg.cn/music/photo_new/T002R300x300M000${ab.mid}.jpg`,
+              coverBig: `https://y.gtimg.cn/music/photo_new/T002R500x500M000${ab.mid}.jpg`,
               coverSmall: `https://y.gtimg.cn/music/photo_new/T002R150x150M000${ab.mid}.jpg`,
             }
           }
@@ -281,6 +285,7 @@ const getAlbum = (mid, raw) => {
           name: ab.name,
           id: ab.mid,
           cover: `https://y.gtimg.cn/music/photo_new/T002R300x300M000${ab.mid}.jpg`,
+          coverBig: `https://y.gtimg.cn/music/photo_new/T002R500x500M000${ab.mid}.jpg`,
           coverSmall: `https://y.gtimg.cn/music/photo_new/T002R150x150M000${ab.mid}.jpg`,
           artist: {
             name: ab.singername,
@@ -336,6 +341,7 @@ const getPlaylist = (disstid, raw) => {
             album: {
               id: item.albummid,
               cover: `https://y.gtimg.cn/music/photo_new/T002R300x300M000${item.albummid}.jpg`,
+              coverBig: `https://y.gtimg.cn/music/photo_new/T002R500x500M000${item.albummid}.jpg`,
               coverSmall: `https://y.gtimg.cn/music/photo_new/T002R150x150M000${item.albummid}.jpg`,
               name: item.albumname
             }
@@ -382,5 +388,6 @@ module.exports = {
   searchAlbum: searchAlbum,
   getSong: getSong,
   getAlbum: getAlbum,
-  getPlaylist: getPlaylist
+  getPlaylist: getPlaylist,
+  searchSuggestion: searchSuggestion,
 };

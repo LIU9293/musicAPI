@@ -192,13 +192,23 @@ const getPlaylist = (vendor, query) => {
   }
 }
 
+const getDailySuggest = () => {
+  return XiamiAPI.getDailySuggest(10);
+}
+
+const searchSuggestion = (key) => {
+  return QQAPI.searchSuggestion(key);
+}
+
 const musicAPI = {
   searchSong: searchSong,
   searchAlbum: searchAlbum,
   searchPlaylist: searchPlaylist,
   getSong: getSong,
   getAlbum: getAlbum,
-  getPlaylist: getPlaylist
+  getPlaylist: getPlaylist,
+  getDailySuggest: getDailySuggest,
+  searchSuggestion: searchSuggestion
 }
 
 module.exports = musicAPI

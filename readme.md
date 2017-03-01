@@ -4,8 +4,6 @@
 from github, qq api is get from y.qq.com and xiami api is get from xiami Mac App.
  Please make no commerical use of this project.
 
-Go to [musicafe.co](https://musicafe.co) as a production example!
-
 ```
 npm install music-api --save
 ```

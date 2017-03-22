@@ -162,11 +162,11 @@ const searchAlbum = (key, limit, page, raw) => {
   return NeteaseRequest(`/cloudsearch/get/web?csrf_token=`, encData);
 }
 
-const getSong = (id, raw) => {
+const getSong = (id, raw, br) => {
   id = id.split('.').map(i => parseInt(i));
   let obj = {
     'ids': id,
-    'br': 999000,
+    'br': br,
     'csrf_token': ''
   };
   let encData = Enc.aesRsaEncrypt(JSON.stringify(obj));

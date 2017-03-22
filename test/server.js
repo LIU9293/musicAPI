@@ -54,11 +54,13 @@ app.get('/search/playlist/:vendor', (req, res) => {
 
 app.get('/get/song/:vendor', (req, res) => {
   let id = req.query.id,
+      br = req.query.br,
       raw = req.query.raw;
   let vendor = req.params.vendor;
   MusicApi.getSong(vendor, {
     id,
-    raw
+    raw,
+    br,
   })
     .then(data => res.json(data))
     .catch(err => res.send(err))

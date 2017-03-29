@@ -137,6 +137,7 @@ const getSong = (vendor, query) => {
     });
   }
   let raw = query.raw,
+      br = query.br || 999000,
       id = query.id;
   switch (vendor) {
     case 'xiami':
@@ -144,7 +145,7 @@ const getSong = (vendor, query) => {
     case 'qq':
       return QQAPI.getSong(id, raw);
     case 'netease':
-      return NeteaseAPI.getSong(id, raw);
+      return NeteaseAPI.getSong(id, raw, br);
     default:
       return Promise.reject('the vendor is invalid !')
   }

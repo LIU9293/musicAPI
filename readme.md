@@ -91,7 +91,7 @@ open browser: localhost:8080/search/song/all?key=林海
    query: {
      id: songID,
      raw: true or false
-     br: Bit rate (optional, default is 999000, example 128000 or 192000 or 320000, etc.)
+     br: Bit rate (only support Netease ! default is 999000, example 128000 or 192000 or 320000)
    }
    ```
    example: [https://musicafe.co/api/get/song/qq?id=003OUlho2HcRHC](https://musicafe.co/api/get/song/qq?id=003OUlho2HcRHC)

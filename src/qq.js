@@ -99,7 +99,7 @@ const searchSong = (key, limit, page, raw) => {
             let songList = json.data.song.list.map(item => {
               return {
                 album: {
-                  id: item.albumid,
+                  id: item.albummid,
                   cover: `https://y.gtimg.cn/music/photo_new/T002R300x300M000${item.albummid}.jpg`,
                   coverBig: `https://y.gtimg.cn/music/photo_new/T002R500x500M000${item.albummid}.jpg`,
                   coverSmall: `https://y.gtimg.cn/music/photo_new/T002R150x150M000${item.albummid}.jpg`,

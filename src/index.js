@@ -193,23 +193,63 @@ const getPlaylist = (vendor, query) => {
   }
 }
 
-const getDailySuggest = () => {
-  return XiamiAPI.getDailySuggest(10);
-}
-
 const searchSuggestion = (key) => {
   return QQAPI.searchSuggestion(key);
 }
 
+const getSuggestSongs = () => {
+  return XiamiAPI.getSuggestSongs(20);
+}
+
+const getSuggestAlbums = (vendor, query) => {
+  let limit = query.limit || 10;
+  let raw = query.raw || null;
+  switch (vendor) {
+    case 'qq':
+      return QQAPI.getSuggestAlbums(limit, raw);
+    case 'xiami':
+      return XiamiAPI.getSuggestAlbums(limit, raw);
+    case 'all':
+      return new Promise((resolve, reject) => {
+        Promise.all([
+          QQAPI.getSuggestAlbums(limit),
+          XiamiAPI.getSuggestAlbums(limit)
+        ])
+          .then(res => {
+            resolve({
+              qq: res[0],
+              xiami: res[1]
+            })
+          })
+          .catch(err => reject({
+            success: false,
+            err,
+            message: 'get suggest album error'
+          }))
+      });
+    default:
+      return Promise.reject({
+        success: false,
+        message: 'get suggest album error, the vendor provide is invalid !'
+      })
+  }
+}
+
+const getSuggestPlaylists = () => {
+  return XiamiAPI.getSuggestPlaylists(20);
+}
+
 const musicAPI = {
-  searchSong: searchSong,
-  searchAlbum: searchAlbum,
-  searchPlaylist: searchPlaylist,
-  getSong: getSong,
-  getAlbum: getAlbum,
-  getPlaylist: getPlaylist,
-  getDailySuggest: getDailySuggest,
-  searchSuggestion: searchSuggestion
+  searchSong,
+  searchAlbum,
+  searchPlaylist,
+  getSong,
+  getAlbum,
+  getPlaylist,
+  searchSuggestion,
+  getSuggestSongs,
+  getSuggestAlbums,
+  getSuggestPlaylists
 }
 
 module.exports = musicAPI

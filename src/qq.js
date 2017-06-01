@@ -368,6 +368,65 @@ const getPlaylist = (disstid, raw) => {
   });
 }
 
+const getSuggestAlbums = (limit, raw) => {
+  let url = 'https://c.y.qq.com/v8/fcg-bin/album_library?';
+  let query = {
+    page: 0,
+    pagesize: limit,
+    language: -1,
+    format: 'json',
+    inCharset: 'utf8',
+    outCharset: 'utf-8',
+    platform: 'yqq',
+    cmd: 'get_album_info',
+    sort: 1,
+    genre: 0,
+    year: 1,
+    pay: 0,
+    type: -1,
+    company: -1
+  };
+  return new Promise((resolve, reject) => {
+    fetch(`${url}${querystring.stringify(query)}`, {
+      headers: {
+        Referer: 'https://y.qq.com/portal/search.html',
+        Host: 'c.y.qq.com'
+      }
+    })
+      .then(res => res.json())
+      .then(d => {
+        if(raw){
+          resolve(d.data);
+        } else {
+          const { albumlist } = d.data;
+          let albumList = albumlist.map(item => {
+            return {
+              id: item.album_mid,
+              cover: `https://y.gtimg.cn/music/photo_new/T002R300x300M000${item.album_mid}.jpg`,
+              coverBig: `https://y.gtimg.cn/music/photo_new/T002R500x500M000${item.album_mid}.jpg`,
+              coverSmall: `https://y.gtimg.cn/music/photo_new/T002R150x150M000${item.album_mid}.jpg`,
+              name: item.album_name,
+              artist: {
+                name: item.singer_name,
+                id: item.singer_mid
+              }
+            }
+          });
+          let obj = {
+            success: true,
+            albumList: albumList
+          };
+          resolve(obj);
+        }
+      })
+      .catch(err => reject({
+        success: false,
+        err,
+        message: 'problem in get qq suggest album, try query with raw=true'
+      }))
+  });
+}
+
 //网页版搜索建议
 const searchSuggestion = (key) => {
   let url = `https://c.y.qq.com/splcloud/fcgi-bin/smartbox_new.fcg?format=json&key=${key}&platform=yqq`;
@@ -383,11 +442,12 @@ const searchSuggestion = (key) => {
 }
 
 module.exports = {
-  searchSong: searchSong,
-  searchPlaylist: searchPlaylist,
-  searchAlbum: searchAlbum,
-  getSong: getSong,
-  getAlbum: getAlbum,
-  getPlaylist: getPlaylist,
-  searchSuggestion: searchSuggestion,
+  searchSong,
+  searchPlaylist,
+  searchAlbum,
+  getSong,
+  getAlbum,
+  getPlaylist,
+  searchSuggestion,
+  getSuggestAlbums
 };

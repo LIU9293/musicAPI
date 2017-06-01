@@ -58,6 +58,7 @@ const searchSong = (key, limit, page, raw) => {
               id: item.song_id,
               needPay: item.need_pay_flag > 0 ? true : false,
               file: item.listen_file,
+              lyric: item.lyricInfo
             };
           });
           let obj = {
@@ -499,22 +500,165 @@ const getPlaylist = (id, raw) => {
   });
 }
 
-const getDailySuggest = (limit) => {
-  return newRequest('mtop.alimusic.recommend.songservice.getdailysongs', {
-    context: '',
-    like: '',
-    limit: limit,
-    listen: '',
-    unlike: ''
+const getSuggestSongs = (limit, raw) => {
+  if (raw) {
+    return newRequest('mtop.alimusic.recommend.songservice.getdailysongs', {
+      context: '',
+      like: '',
+      limit: limit,
+      listen: '',
+      unlike: ''
+    });
+  }
+  return new Promise((resolve, reject) => {
+    newRequest('mtop.alimusic.recommend.songservice.getdailysongs', {
+      context: '',
+      like: '',
+      limit: limit,
+      listen: '',
+      unlike: ''
+    })
+      .then(res => {
+        const { songs } = res.data.data;
+        const songList = songs.map((item) => {
+          let file = '';
+          for(let i = 0; i<item.listenFiles.length; i++){
+            if(item.listenFiles[i].format === 'mp3'){
+              file = item.listenFiles[i].listenFile;
+              if(item.listenFiles[i].quality === 'l'){
+                break;
+              }
+            }
+          }
+          return {
+            album: {
+              name: item.albumName,
+              id: item.artistId,
+              cover: item.albumLogo.replace('http', 'https') + '@!c-185-185',
+              coverBig: item.albumLogo.replace('http', 'https'),
+              coverSmall: item.albumLogo.replace('http', 'https') + '@!c-185-185',
+            },
+            artists: [{
+              name: item.artistName,
+              id: item.artistId
+            }],
+            name: item.songName,
+            id: item.songId,
+            needPay: item.need_pay_flag > 0 ? true : false,
+            file,
+            lyric: item.lyricInfo
+          }
+        });
+        resolve({
+          success: true,
+          songList
+        });
+      })
+      .catch(err => {
+        reject({
+          success: false,
+          message: 'get xiami suggest error, please query with raw=true to see more info.'
+        });
+      })
+  });
+}
+
+const getSuggestPlaylists = (limit, raw) => {
+  if(raw){
+    return newRequest('mtop.alimusic.music.list.collectservice.getcollects', {
+      key: "",
+      limit: 50,
+      order: "recommend",
+      page: 1
+    });
+  }
+  return new Promise((resolve, reject) => {
+    newRequest('mtop.alimusic.music.list.collectservice.getcollects', {
+      key: "",
+      limit: 50,
+      order: "recommend",
+      page: 1
+    })
+      .then(res => {
+        const { collects } = res.data.data;
+        const playlists = collects.map((item) => {
+          return {
+            id: item.listId,
+            cover: item.collectLogo.replace('http://', 'https://') + '@!c-185-185',
+            coverBig: item.collectLogo.replace('http://', 'https://') + '@!c-185-185',
+            coverSmall: item.collectLogo.replace('http://', 'https://') + '@!c-185-185',
+            name: item.collectName,
+            author: {
+              name: item.userName,
+              id: item.userId,
+              avatar: item.authorAvatar
+            }
+          }
+        });
+        resolve({
+          success: true,
+          playlists
+        })
+      })
+      .catch(err => reject({
+        success: false,
+        message: 'get xiami suggest playlist error, query with raw=true to see more info.'
+      }));
+  });
+}
+
+const getSuggestAlbums = (limit, raw) => {
+  if(raw){
+    return newRequest('mtop.alimusic.recommend.albumservice.getmusiclist', {
+      pagingVO: {
+        page: 1,
+        pageSize: limit
+      }
+    });
+  }
+  return new Promise((resolve, reject) => {
+    newRequest('mtop.alimusic.recommend.albumservice.getmusiclist', {
+      pagingVO: {
+        page: 1,
+        pageSize: limit
+      }
+    })
+    .then(res => {
+      const { albums } = res.data.data;
+      const albumList = albums.map((item) => {
+        return {
+          id: item.albumId,
+          cover: item.albumLogo.replace('http://', 'https://') + '@1e_1c_0i_1o_100Q_250w_250h',
+          coverBig: item.albumLogo.replace('http://', 'https://') + '@1e_1c_0i_1o_100Q_400w_400h',
+          coverSmall: item.albumLogo.replace('http://', 'https://') + '@1e_1c_0i_1o_100Q_150w_150h',
+          name: item.albumName,
+          needPay: item.price/1 > 0 ? true : false,
+          artist: {
+            name: item.artistName,
+            id: item.artistId
+          }
+        }
+      });
+      resolve({
+        success: true,
+        albumList
+      })
+    })
+    .catch(err => reject({
+      success: false,
+      message: 'get xiami suggest album error, query with raw=true to see more info.'
+    }));
   });
 }
 
 module.exports = {
-  searchSong: searchSong,
-  searchPlaylist: searchPlaylist,
-  searchAlbum: searchAlbum,
-  getSong: getSong,
-  getAlbum: getAlbum,
-  getPlaylist: getPlaylist,
-  getDailySuggest: getDailySuggest,
+  searchSong,
+  searchPlaylist,
+  searchAlbum,
+  getSong,
+  getAlbum,
+  getPlaylist,
+  getSuggestSongs,
+  getSuggestPlaylists,
+  getSuggestAlbums
 };

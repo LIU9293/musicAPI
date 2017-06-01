@@ -2,93 +2,72 @@
 const express = require('express');
 const port = process.env.PORT || 8080;
 const app = express();
+const compression = require('compression');
+const morgan = require('morgan');
+const cors = require('cors');
 const MusicApi = require('../src');
 
-app.get('/search/song/:vendor', (req, res) => {
-  let key = req.query.key,
-      limit = req.query.limit,
-      page = req.query.page,
-      raw = req.query.raw;
+// Enable CORS with various options
+// https://github.com/expressjs/cors
+app.use(cors());
+
+// Request logger
+// https://github.com/expressjs/morgan
+app.use(morgan('combined'));
+
+//gzip
+app.use(compression());
+
+app.get('/api/search/song/:vendor', (req, res) => {
   let vendor = req.params.vendor;
-  MusicApi.searchSong(vendor, {
-    key,
-    limit,
-    page,
-    raw
-  })
+  MusicApi.searchSong(vendor, req.query || {})
     .then(data => res.json(data))
     .catch(err => res.send(err))
 });
 
-app.get('/search/album/:vendor', (req, res) => {
-  let key = req.query.key,
-      limit = req.query.limit,
-      page = req.query.page,
-      raw = req.query.raw;
+app.get('/api/search/album/:vendor', (req, res) => {
   let vendor = req.params.vendor;
-  MusicApi.searchAlbum(vendor, {
-    key,
-    limit,
-    page,
-    raw
-  })
+  MusicApi.searchAlbum(vendor, req.query || {})
     .then(data => res.json(data))
     .catch(err => res.send(err))
 });
 
-app.get('/search/playlist/:vendor', (req, res) => {
-  let key = req.query.key,
-      limit = req.query.limit,
-      page = req.query.page,
-      raw = req.query.raw;
+app.get('/api/search/playlist/:vendor', (req, res) => {
   let vendor = req.params.vendor;
-  MusicApi.searchPlaylist(vendor, {
-    key,
-    limit,
-    page,
-    raw
-  })
+  MusicApi.searchPlaylist(vendor, req.query || {})
     .then(data => res.json(data))
     .catch(err => res.send(err))
 })
 
-app.get('/get/song/:vendor', (req, res) => {
-  let id = req.query.id,
-      br = req.query.br,
-      raw = req.query.raw;
+app.get('/api/get/song/:vendor', (req, res) => {
   let vendor = req.params.vendor;
-  MusicApi.getSong(vendor, {
-    id,
-    raw,
-    br,
-  })
+  MusicApi.getSong(vendor, req.query || {})
     .then(data => res.json(data))
     .catch(err => res.send(err))
 });
 
-app.get('/get/album/:vendor', (req, res) => {
-  let id = req.query.id,
-      raw = req.query.raw;
+app.get('/api/get/album/:vendor', (req, res) => {
   let vendor = req.params.vendor;
-  MusicApi.getAlbum(vendor, {
-    id,
-    raw
-  })
+  MusicApi.getAlbum(vendor, req.query || {})
     .then(data => res.json(data))
     .catch(err => res.send(err))
 });
 
-app.get('/get/playlist/:vendor', (req, res) => {
-  let id = req.query.id,
-      raw = req.query.raw;
+app.get('/api/get/playlist/:vendor', (req, res) => {
   let vendor = req.params.vendor;
-  MusicApi.getPlaylist(vendor, {
-    id,
-    raw
-  })
+  MusicApi.getPlaylist(vendor, req.query || {})
     .then(data => res.json(data))
     .catch(err => res.send(err))
 });
+
+app.get('/api/suggest/album/:vendor', (req, res) => {
+  let limit = req.query.limit,
+      raw = req.query.raw;
+  let vendor = req.params.vendor;
+  MusicApi.getSuggestAlbums(vendor, req.query || {})
+    .then(data => res.json(data))
+    .catch(err => res.send(err))
+})
 
 app.listen(port);
 

@@ -39,7 +39,7 @@ open browser: localhost:8080/search/song/all?key=林海
  - [x] get song play url.
  - [x] get playlist detail.
  - [x] get album detail.
- - [ ] get daily suggestions.
+ - [x] get suggestions albums.
  - [ ] get artists' detail.
  - [x] raw data / converted data available.
 
@@ -60,7 +60,7 @@ open browser: localhost:8080/search/song/all?key=林海
 
  - **musicAPI.searchAlbum(vendor, query)**
 
-   ``` 
+   ```
    vendor: one if ['netease', 'xiami', 'qq', 'all'];
    query: {
      key: KEY,
@@ -117,3 +117,14 @@ open browser: localhost:8080/search/song/all?key=林海
    }
    ```
    example: [http://musicafe.co:8080/api/get/playlist/netease?id=461600464](http://musicafe.co:8080/api/get/playlist/netease?id=461600464)
+
+ - **musicAPI.getSuggestAlbums(vendor, query)**
+
+   ```
+   vendor: one of ['all', 'xiami', 'qq'];
+   query: {
+     limit: limit,
+     raw: true or false
+   }
+   ```
+   example: [http://musicafe.co:8080/api/suggest/album/all?limit=10](http://musicafe.co:8080/api/suggest/album/all?limit=10)

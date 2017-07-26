@@ -216,7 +216,7 @@ const newRequest = (api, query) => {
     requestStr: JSON.stringify(queryData)
   });
 
-  if (!g.XIAMI_TOKEN) {
+  if (!g.XIAMI_TOKEN || !g.XIAMI_SIGNED_TOKEN) {
     return new Promise((resolve, reject) => {
       /*
        *  get token from xiami
@@ -231,9 +231,11 @@ const newRequest = (api, query) => {
            const myToken = token[0].replace('_m_h5_tk=', '').split('_')[0];
 
            // set cache
-           g.XIAMI_TOKEN = myToken;
+           g.XIAMI_TOKEN = token;
+           g.XIAMI_SIGNED_TOKEN = myToken;
            setTimeout(() => {
              g.XIAMI_TOKEN = null;
+             g.XIAMI_SIGNED_TOKEN = null;
            }, 1000 * 60 * 60 * 24);
 
            /*
@@ -282,7 +284,7 @@ const newRequest = (api, query) => {
        */
       let appKey = "12574478"
       let t = new Date().getTime();
-      let sign = Crypto.MD5(`${g.XIAMI_TOKEN}&${t.toString()}&${appKey}&${queryStr}`);
+      let sign = Crypto.MD5(`${g.XIAMI_SIGNED_TOKEN}&${t.toString()}&${appKey}&${queryStr}`);
 
       /*
        * generate request data
@@ -301,7 +303,7 @@ const newRequest = (api, query) => {
          headers: {
            Host: 'acs.m.xiami.com',
            'Content-Type': 'application/x-www-form-urlencoded',
-           Cookie: `${token[0]};${token[1]}`
+           Cookie: `${g.XIAMI_TOKEN[0]};${g.XIAMI_TOKEN[1]}`
          },
        };
 

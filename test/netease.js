@@ -1,5 +1,7 @@
-var {getAlbum} = require('../src/netease');
+var {searchSong} = require('../src/netease');
 
-var url = getAlbum("3029801", false);
-
-console.log(url);
+searchSong("taylor", 10, 1, false).then(res => {
+  console.log(res);
+}).catch(err => {
+  console.log(err);
+})

@@ -11,6 +11,8 @@ const NeteaseRequest = (url, query) => {
     headers: {
       'Origin': 'http://music.163.com',
       'Referer': 'http://music.163.com',
+      'X-Real-IP': '211.161.244.70',
+      'Cookie': 'appver=1.5.2',
       'Content-Type': 'application/x-www-form-urlencoded'
     },
     credentials: 'include'

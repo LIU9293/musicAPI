@@ -1,5 +1,5 @@
-const { getSuggestSongs, getSuggestPlaylists, getSuggestAlbums } = require('../src/xiami');
+const { getSuggestSongs, getSuggestPlaylists, searchPlaylist, searchAlbum } = require('../src/xiami');
 
-getSuggestPlaylists(10)
+getSuggestSongs(10)
   .then(res => console.log(res))
   .catch(err => console.log(err));

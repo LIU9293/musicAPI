@@ -199,6 +199,87 @@ const getSong = (id, raw) => {
  */
 
 const newRequest = (api, query) => {
+  if (!g.XIAMI_TOKEN || !g.XIAMI_SIGNED_TOKEN) {
+    return new Promise((resolve, reject) => {
+      getXiamiToken(api)
+        .then(tokenObj => {
+          // set cache
+          g.XIAMI_TOKEN = tokenObj.token;
+          g.XIAMI_SIGNED_TOKEN = tokenObj.signedToken;
+
+          // clear cache 1 day later
+          setTimeout(() => {
+            g.XIAMI_TOKEN = null;
+            g.XIAMI_SIGNED_TOKEN = null;
+          }, 1000 * 60 * 60 * 24);
+
+          return makeXiamiRequest(api, query, tokenObj.token, tokenObj.signedToken);
+        })
+        .then(res => {
+          resolve(res);
+        })
+        .catch(err => {
+          reject(err)
+        });
+    });
+  } else {
+    return new Promise((resolve, reject) => {
+      makeXiamiRequest(api, query, g.XIAMI_TOKEN, g.XIAMI_SIGNED_TOKEN)
+        .then(res => {
+          resolve(res);
+        })
+        .catch(err => {
+          getXiamiToken(api)
+            .then(tokenObj => {
+              // set cache
+              g.XIAMI_TOKEN = tokenObj.token;
+              g.XIAMI_SIGNED_TOKEN = tokenObj.signedToken;
+
+              // clear cache 1 day later
+              setTimeout(() => {
+                g.XIAMI_TOKEN = null;
+                g.XIAMI_SIGNED_TOKEN = null;
+              }, 1000 * 60 * 60 * 24);
+
+              return makeXiamiRequest(api, query, tokenObj.token, tokenObj.signedToken);
+            })
+            .then(res => {
+              resolve(res);
+            })
+            .catch(err => {
+              reject(err)
+            });
+        });
+    });
+  }
+}
+
+const getXiamiToken = (api) => {
+  return new Promise((resolve, reject) => {
+    /*
+     *  get token from xiami
+     *  exmaple: http://acs.m.xiami.com/h5/mtop.alimusic.search.searchservice.searchsongs/1.0/
+     */
+     fetch(`${NEW_API_URL}${api}/1.0/`)
+       .then(res => {
+
+         // myToken is the final token we need;
+         let token = Array.from(res.headers._headers['set-cookie']);
+         token = token.map(i => i.split(';')[0].trim());
+         const myToken = token[0].replace('_m_h5_tk=', '').split('_')[0];
+
+         resolve({
+           token,
+           signedToken: myToken
+         });
+       })
+       .catch(err => {
+         reject(err);
+       })
+   });
+}
+
+const makeXiamiRequest = (api, query, token, signedToken) => {
   // set up query data, will use to generate url and get sign
   let queryData = {
     header: {
@@ -216,106 +297,43 @@ const newRequest = (api, query) => {
     requestStr: JSON.stringify(queryData)
   });
 
-  if (!g.XIAMI_TOKEN || !g.XIAMI_SIGNED_TOKEN) {
-    return new Promise((resolve, reject) => {
-      /*
-       *  get token from xiami
-       *  exmaple: http://acs.m.xiami.com/h5/mtop.alimusic.search.searchservice.searchsongs/1.0/
-       */
-       fetch(`${NEW_API_URL}${api}/1.0/`)
-         .then(res => {
+  return new Promise((resolve, reject) => {
+    /*
+     * use token to get sign
+     */
+    let appKey = "12574478"
+    let t = new Date().getTime();
+    let sign = Crypto.MD5(`${signedToken}&${t.toString()}&${appKey}&${queryStr}`);
 
-           // myToken is the final token we need;
-           let token = Array.from(res.headers._headers['set-cookie']);
-           token = token.map(i => i.split(';')[0].trim());
-           const myToken = token[0].replace('_m_h5_tk=', '').split('_')[0];
+    /*
+     * generate request data
+     */
+     let params = {
+       appKey: 12574478,
+       t,
+       sign,
+       v: 1.0,
+       type: 'originaljson',
+       dataType: 'json',
+       api,
+       data: queryStr
+     };
+     let opts = {
+       headers: {
+         Host: 'acs.m.xiami.com',
+         'Content-Type': 'application/x-www-form-urlencoded',
+         Cookie: `${token[0]};${token[1]}`
+       },
+     };
 
-           // set cache
-           g.XIAMI_TOKEN = token;
-           g.XIAMI_SIGNED_TOKEN = myToken;
-           setTimeout(() => {
-             g.XIAMI_TOKEN = null;
-             g.XIAMI_SIGNED_TOKEN = null;
-           }, 1000 * 60 * 60 * 24);
-
-           /*
-            * use token to get sign
-            */
-           let appKey = "12574478"
-           let t = new Date().getTime();
-           let sign = Crypto.MD5(`${myToken}&${t.toString()}&${appKey}&${queryStr}`);
-
-           /*
-            * generate request data
-            */
-            let params = {
-              appKey: 12574478,
-              t,
-              sign,
-              v: 1.0,
-              type: 'originaljson',
-              dataType: 'json',
-              api,
-              data: queryStr
-            };
-            let opts = {
-              headers: {
-                Host: 'acs.m.xiami.com',
-                'Content-Type': 'application/x-www-form-urlencoded',
-                Cookie: `${token[0]};${token[1]}`
-              },
-            };
-
-           /*
-            * make request
-            */
-            fetch(`${NEW_API_URL}${api}/1.0/?${querystring.stringify(params)}`, opts)
-              .then(res => res.json())
-              .then(json => resolve(json))
-              .catch(err => reject(err))
-
-         })
-       .catch(err => reject(err))
-    });
-  } else {
-    return new Promise((resolve, reject) => {
-      /*
-       * use token to get sign
-       */
-      let appKey = "12574478"
-      let t = new Date().getTime();
-      let sign = Crypto.MD5(`${g.XIAMI_SIGNED_TOKEN}&${t.toString()}&${appKey}&${queryStr}`);
-
-      /*
-       * generate request data
-       */
-       let params = {
-         appKey: 12574478,
-         t,
-         sign,
-         v: 1.0,
-         type: 'originaljson',
-         dataType: 'json',
-         api,
-         data: queryStr
-       };
-       let opts = {
-         headers: {
-           Host: 'acs.m.xiami.com',
-           'Content-Type': 'application/x-www-form-urlencoded',
-           Cookie: `${g.XIAMI_TOKEN[0]};${g.XIAMI_TOKEN[1]}`
-         },
-       };
-
-       /*
-        * make request
-        */
-        fetch(`${NEW_API_URL}${api}/1.0/?${querystring.stringify(params)}`, opts)
-          .then(res => res.json())
-          .then(json => resolve(json))
-          .catch(err => reject(err))
-    });
-  }
+     /*
+      * make request
+      */
+      fetch(`${NEW_API_URL}${api}/1.0/?${querystring.stringify(params)}`, opts)
+        .then(res => res.json())
+        .then(json => resolve(json))
+        .catch(err => reject(err))
+  });
 }
 
 const searchPlaylist = (key, limit, page, raw) => {

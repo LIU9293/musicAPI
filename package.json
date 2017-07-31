@@ -1,10 +1,11 @@
 {
   "name": "music-api",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "description": "Centralized NodeJS api sdk for xiami, netease, and qq music.",
   "main": "src/index.js",
   "scripts": {
-    "test": "node test/server.js"
+    "test": "node test/server.js",
+    "start": "node test/server.js"
   },
   "keywords": [
     "API",

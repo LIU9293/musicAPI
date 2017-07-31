@@ -207,11 +207,11 @@ const newRequest = (api, query) => {
           g.XIAMI_TOKEN = tokenObj.token;
           g.XIAMI_SIGNED_TOKEN = tokenObj.signedToken;
 
-          // clear cache 1 day later
+          // clear cache 1 hour later
           setTimeout(() => {
             g.XIAMI_TOKEN = null;
             g.XIAMI_SIGNED_TOKEN = null;
-          }, 1000 * 60 * 60 * 24);
+          }, 1000 * 60 * 60);
 
           return makeXiamiRequest(api, query, tokenObj.token, tokenObj.signedToken);
         })
@@ -235,11 +235,11 @@ const newRequest = (api, query) => {
               g.XIAMI_TOKEN = tokenObj.token;
               g.XIAMI_SIGNED_TOKEN = tokenObj.signedToken;
 
-              // clear cache 1 day later
+              // clear cache 1 hour later
               setTimeout(() => {
                 g.XIAMI_TOKEN = null;
                 g.XIAMI_SIGNED_TOKEN = null;
-              }, 1000 * 60 * 60 * 24);
+              }, 1000 * 60 * 60);
 
               return makeXiamiRequest(api, query, tokenObj.token, tokenObj.signedToken);
             })
@@ -298,6 +298,7 @@ const makeXiamiRequest = (api, query, token, signedToken) => {
   });
 
   return new Promise((resolve, reject) => {
+    const random = Math.floor(Math.random() * 244) + 1;
     /*
      * use token to get sign
      */
@@ -322,6 +323,7 @@ const makeXiamiRequest = (api, query, token, signedToken) => {
        headers: {
          Host: 'acs.m.xiami.com',
          'Content-Type': 'application/x-www-form-urlencoded',
+         'X-Real-IP': `211.161.244.${random}`,
          Cookie: `${token[0]};${token[1]}`
        },
      };

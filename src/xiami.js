@@ -221,6 +221,9 @@ const newRequest = (api, query) => {
     return new Promise((resolve, reject) => {
       makeXiamiRequest(api, query, g.XIAMI_TOKEN, g.XIAMI_SIGNED_TOKEN)
         .then(res => {
+          if(JSON.stringify(res.data) === '{}') {
+            throw 'sign error';
+          }
           resolve(res);
         })
         .catch(err => {

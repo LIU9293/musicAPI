@@ -4,8 +4,9 @@ const parseString = require('xml2js').parseString;
 const baseURL = 'http://api.xiami.com/web?';
 const NEW_API_URL = 'http://acs.m.xiami.com/h5/';
 const Crypto = require('./crypto');
-const fetch = require('node-fetch');
 const g = typeof window === 'undefined' ? global : window;
+require('es6-promise').polyfill();
+require('isomorphic-fetch');
 
 /*
  * this api is using by http://h.xiami.com, xiami's mobile site.

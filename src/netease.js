@@ -2,7 +2,8 @@
 const Enc = require('./crypto');
 const querystring = require('querystring');
 const NETEASE_API_URL = 'http://music.163.com/weapi';
-const fetch = require('node-fetch');
+require('es6-promise').polyfill();
+require('isomorphic-fetch');
 
 const NeteaseRequest = (url, query) => {
   let opts = {

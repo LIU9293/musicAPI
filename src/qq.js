@@ -5,7 +5,8 @@
 const querystring = require('querystring');
 const origin = 'http://y.qq.com/';
 const S = require('string');
-const fetch = require('node-fetch');
+require('es6-promise').polyfill();
+require('isomorphic-fetch');
 
 const header = {
   Origin: origin,

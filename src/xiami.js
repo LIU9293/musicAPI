@@ -1,6 +1,6 @@
 'use strict'
 const querystring = require('querystring');
-const parseString = require('xml2js').parseString;
+const convert = require('xml-js');
 const baseURL = 'http://api.xiami.com/web?';
 const NEW_API_URL = 'http://acs.m.xiami.com/h5/';
 const Crypto = require('./crypto');
@@ -145,47 +145,41 @@ const getSong = (id, raw) => {
     fetch(`http://www.xiami.com/song/playlist/id/${id}`)
       .then(res => res.text())
       .then(xml => {
-        console.log(xml);
-        parseString(xml, (err, res) => {
-          if(err){
-            reject({
-              success: false,
-              message: 'err paring xml , please check xiami SDK'
-            });
-          } else {
-            let ress = res.playlist.trackList[0].track[0];
-            for(let i in ress){
-              ress[i] = ress[i][0];
-            }
-            ress.url = parseLocation(ress.location);
-            if(raw){
-              resolve(ress);
-            } else {
-              let obj = {
-                success: true,
-                artist: {
-                  id: ress.artistId,
-                  name: ress.artistName
-                },
-                album: {
-                  id: ress.albumId,
-                  name: ress.album_name,
-                  cover: ress.album_pic,
-                },
-                url: ress.url,
-                lyric: ress.lyric_url,
-                name: ress.name
-              };
-              resolve(obj);
-            }
+          console.log(xml);
+          const res = convert.xml2js(xml, {compact: true, trim: 4});
+          let ress = res.playlist.trackList.track;
+          for(let i in ress){
+            ress[i] = ress[i]['_text'];
           }
-        });
-      })
-      .catch(err => reject({
-        success: false,
-        message: '虾米 - 歌曲需要付费或者ID错误!'
-      }))
-  });
+          console.log(ress);
+
+          ress.url = parseLocation(ress.location);
+          if(raw){
+            resolve(ress);
+          } else {
+            let obj = {
+              success: true,
+              artist: {
+                id: ress.artistId,
+                name: ress.artistName
+              },
+              album: {
+                id: ress.albumId,
+                name: ress.album_name,
+                cover: ress.album_pic,
+              },
+              url: ress.url,
+              lyric: ress.lyric_url,
+              name: ress.name
+            };
+            resolve(obj);
+          }
+        })
+        .catch(err => reject({
+          success: false,
+          message: '虾米 - 歌曲需要付费或者ID错误!'
+        }));
+    });
 }
 
 /*

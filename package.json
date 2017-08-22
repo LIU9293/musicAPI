@@ -1,6 +1,6 @@
 {
   "name": "music-api",
-  "version": "0.3.5",
+  "version": "0.3.6",
   "description": "Centralized NodeJS api sdk for xiami, netease, and qq music.",
   "main": "src/index.js",
   "scripts": {
@@ -23,7 +23,7 @@
   "license": "MIT",
   "dependencies": {
     "big-integer": "^1.6.17",
-    "crypto": "^0.0.3",
+    "crypto-browserify": "^3.11.1",
     "node-fetch": "^1.6.3",
     "string": "^3.3.3",
     "xml2js": "^0.4.17"

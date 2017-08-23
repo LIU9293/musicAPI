@@ -1,4 +1,4 @@
-var crypto = typeof window === undefined ? require('crypto') : require('crypto-browserify');
+var crypto = typeof window === 'undefined' ? require('crypto') : require('crypto-browserify');
 var bigInt = require('big-integer');
 
 function addPadding(encText, modulus) {

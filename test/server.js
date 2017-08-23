@@ -3,7 +3,7 @@ const express = require('express');
 const port = process.env.PORT || 8080;
 const app = express();
 const compression = require('compression');
-const morgan = require('morgan');
+// const morgan = require('morgan');
 const cors = require('cors');
 const MusicApi = require('../src');
 
@@ -13,7 +13,7 @@ app.use(cors());
 
 // Request logger
 // https://github.com/expressjs/morgan
-app.use(morgan('combined'));
+// app.use(morgan('combined'));
 
 //gzip
 app.use(compression());

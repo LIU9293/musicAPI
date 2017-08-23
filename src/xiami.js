@@ -202,12 +202,6 @@ const newRequest = (api, query) => {
           g.XIAMI_TOKEN = tokenObj.token;
           g.XIAMI_SIGNED_TOKEN = tokenObj.signedToken;
 
-          // clear cache 1 hour later
-          setTimeout(() => {
-            g.XIAMI_TOKEN = null;
-            g.XIAMI_SIGNED_TOKEN = null;
-          }, 1000 * 60 * 60);
-
           return makeXiamiRequest(api, query, tokenObj.token, tokenObj.signedToken);
         })
         .then(res => {
@@ -219,7 +213,7 @@ const newRequest = (api, query) => {
     });
   } else {
     return new Promise((resolve, reject) => {
-      makeXiamiRequest(api, query, g.XIAMI_TOKEN, g.XIAMI_SIGNED_TOKEN)
+      makeXiamiRequest(api, query, g.XIAMI_TOKEN + '1', g.XIAMI_SIGNED_TOKEN)
         .then(res => {
           if(JSON.stringify(res.data) === '{}') {
             throw 'sign error';
@@ -232,12 +226,6 @@ const newRequest = (api, query) => {
               // set cache
               g.XIAMI_TOKEN = tokenObj.token;
               g.XIAMI_SIGNED_TOKEN = tokenObj.signedToken;
-
-              // clear cache 1 hour later
-              setTimeout(() => {
-                g.XIAMI_TOKEN = null;
-                g.XIAMI_SIGNED_TOKEN = null;
-              }, 1000 * 60 * 60);
 
               return makeXiamiRequest(api, query, tokenObj.token, tokenObj.signedToken);
             })

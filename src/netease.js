@@ -166,7 +166,7 @@ const searchAlbum = (key, limit, page, raw) => {
 }
 
 const getSong = (id, raw, br) => {
-  id = id.split('.').map(i => parseInt(i));
+  id = id.toString().split('.').map(i => parseInt(i));
   let obj = {
     'ids': id,
     'br': br,

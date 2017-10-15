@@ -7,14 +7,7 @@
     "test": "node test/server.js",
     "start": "node test/server.js"
   },
-  "keywords": [
-    "API",
-    "SDK",
-    "Music",
-    "Xiami",
-    "Netease",
-    "QQMusic"
-  ],
+  "keywords": ["API", "SDK", "Music", "Xiami", "Netease", "QQMusic"],
   "repository": {
     "type": "git",
     "url": "https://github.com/LIU9293/musicAPI.git"

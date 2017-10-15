@@ -1,19 +1,19 @@
-'use strict'
+'use strict';
 const NeteaseAPI = require('./netease');
 const XiamiAPI = require('./xiami');
 const QQAPI = require('./qq');
 
 const searchSong = (vendor, query) => {
-  if(!query.key){
+  if (!query.key) {
     return Promise.reject({
       success: false,
       message: 'No search key provided !'
     });
   }
   let limit = query.limit || 10,
-      page = query.page || 1,
-      key = query.key,
-      raw = query.raw || null;
+    page = query.page || 1,
+    key = query.key,
+    raw = query.raw || null;
   switch (vendor) {
     case 'xiami':
       return XiamiAPI.searchSong(key, limit, page, raw);
@@ -35,27 +35,27 @@ const searchSong = (vendor, query) => {
               netease: res[2]
             });
           })
-          .catch(err => reject(err))
-      })
+          .catch(err => reject(err));
+      });
     default:
       return Promise.reject({
         success: false,
         message: 'when search songs, the vendor provided is invalid !'
-      })
+      });
   }
-}
+};
 
 const searchAlbum = (vendor, query) => {
-  if(!query.key){
+  if (!query.key) {
     return Promise.reject({
       success: false,
       message: 'No search key provided !'
     });
   }
   let limit = query.limit || 10,
-      page = query.page || 1,
-      key = query.key,
-      raw = query.raw || null;
+    page = query.page || 1,
+    key = query.key,
+    raw = query.raw || null;
   switch (vendor) {
     case 'xiami':
       return XiamiAPI.searchAlbum(key, limit, page, raw);
@@ -77,27 +77,27 @@ const searchAlbum = (vendor, query) => {
               netease: res[2]
             });
           })
-          .catch(err => reject(err))
+          .catch(err => reject(err));
       });
     default:
       return Promise.reject({
         success: false,
         message: 'when search album, the vendor provided is invalid !'
-      })
+      });
   }
-}
+};
 
 const searchPlaylist = (vendor, query) => {
-  if(!query.key){
+  if (!query.key) {
     return Promise.reject({
       success: false,
       message: 'No search key provided !'
     });
   }
   let limit = query.limit || 10,
-      page = query.page || 1,
-      key = query.key,
-      raw = query.raw || null;
+    page = query.page || 1,
+    key = query.key,
+    raw = query.raw || null;
   switch (vendor) {
     case 'xiami':
       return XiamiAPI.searchPlaylist(key, limit, page, raw);
@@ -119,26 +119,26 @@ const searchPlaylist = (vendor, query) => {
               netease: res[2]
             });
           })
-          .catch(err => reject(err))
+          .catch(err => reject(err));
       });
     default:
       return Promise.reject({
         success: false,
         message: 'when search playlist, the vendor provided is invalid !'
-      })
+      });
   }
-}
+};
 
 const getSong = (vendor, query) => {
-  if(!query.id){
+  if (!query.id) {
     return Promise.reject({
       success: false,
       message: 'No song id provided !'
     });
   }
   let raw = query.raw,
-      br = query.br || 999000,
-      id = query.id;
+    br = query.br || 999000,
+    id = query.id;
   switch (vendor) {
     case 'xiami':
       return XiamiAPI.getSong(id, raw);
@@ -147,19 +147,19 @@ const getSong = (vendor, query) => {
     case 'netease':
       return NeteaseAPI.getSong(id, raw, br);
     default:
-      return Promise.reject('the vendor is invalid !')
+      return Promise.reject('the vendor is invalid !');
   }
-}
+};
 
 const getAlbum = (vendor, query) => {
-  if(!query.id){
+  if (!query.id) {
     return Promise.reject({
       success: false,
       message: 'No album id provided !'
     });
   }
   let raw = query.raw,
-      id = query.id;
+    id = query.id;
   switch (vendor) {
     case 'xiami':
       return XiamiAPI.getAlbum(id, raw);
@@ -168,19 +168,19 @@ const getAlbum = (vendor, query) => {
     case 'netease':
       return NeteaseAPI.getAlbum(id, raw);
     default:
-      return Promise.reject('the vendor is invalid !')
+      return Promise.reject('the vendor is invalid !');
   }
-}
+};
 
 const getPlaylist = (vendor, query) => {
-  if(!query.id){
+  if (!query.id) {
     return Promise.reject({
       success: false,
       message: 'No playlist id provided !'
     });
   }
   let raw = query.raw,
-      id = query.id;
+    id = query.id;
   switch (vendor) {
     case 'xiami':
       return XiamiAPI.getPlaylist(id, raw);
@@ -189,17 +189,17 @@ const getPlaylist = (vendor, query) => {
     case 'netease':
       return NeteaseAPI.getPlaylist(id, raw);
     default:
-      return Promise.reject('the vendor is invalid !')
+      return Promise.reject('the vendor is invalid !');
   }
-}
+};
 
-const searchSuggestion = (key) => {
+const searchSuggestion = key => {
   return QQAPI.searchSuggestion(key);
-}
+};
 
 const getSuggestSongs = () => {
   return XiamiAPI.getSuggestSongs(20);
-}
+};
 
 const getSuggestAlbums = (vendor, query) => {
   let limit = query.limit || 10;
@@ -219,25 +219,27 @@ const getSuggestAlbums = (vendor, query) => {
             resolve({
               qq: res[0],
               xiami: res[1]
-            })
+            });
           })
-          .catch(err => reject({
-            success: false,
-            err,
-            message: 'get suggest album error'
-          }))
+          .catch(err =>
+            reject({
+              success: false,
+              err,
+              message: 'get suggest album error'
+            })
+          );
       });
     default:
       return Promise.reject({
         success: false,
         message: 'get suggest album error, the vendor provide is invalid !'
-      })
+      });
   }
-}
+};
 
 const getSuggestPlaylists = () => {
   return XiamiAPI.getSuggestPlaylists(20);
-}
+};
 
 const musicAPI = {
   searchSong,
@@ -250,6 +252,6 @@ const musicAPI = {
   getSuggestSongs,
   getSuggestAlbums,
   getSuggestPlaylists
-}
+};
 
-module.exports = musicAPI
+module.exports = musicAPI;

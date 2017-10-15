@@ -1,4 +1,9 @@
-const { getSuggestSongs, getSuggestPlaylists, searchPlaylist, getSong } = require('../src/xiami');
+const {
+  getSuggestSongs,
+  getSuggestPlaylists,
+  searchPlaylist,
+  getSong
+} = require('../src/xiami');
 
 getSong(10841)
   .then(res => console.log(res))

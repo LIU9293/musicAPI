@@ -333,7 +333,6 @@ const getPlaylist = (id, raw) => {
           };
           resolve(obj);
         } catch (e) {
-          console.log(e);
           reject({
             success: false,
             message:

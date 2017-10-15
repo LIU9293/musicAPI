@@ -58,7 +58,7 @@ const searchSong = (key, limit, page, raw) => {
                             }],
                             name: item.song_name,
                             id: item.song_id,
-                            cp: Boolean(item.listen_file),
+                            cp: !item.listen_file,
                             needPay: item.need_pay_flag > 0 ? true : false,
                             file: item.listen_file,
                             lyric: item.lyricInfo

@@ -28,7 +28,8 @@ cd musicAPI
 npm install
 npm run test
 
-open browser: localhost:8080/search/song/all?key=林海
+// open another terminal
+curl http://localhost:8080/api/search/song/all?key=taylor&limit=5&page=1
 
 ```
 
@@ -56,7 +57,7 @@ open browser: localhost:8080/search/song/all?key=林海
      raw: true or false
    }
    ```
-   example: [https://music-api-pjheqeosjj.now.sh/api/search/song/netease?key=刘瑞琦&limit=5&page=1](https://music-api-pjheqeosjj.now.sh/api/search/song/netease?key=刘瑞琦&limit=5&page=1)
+   example: [https://music-api-jwzcyzizya.now.sh/api/search/song/netease?key=刘瑞琦&limit=5&page=1](https://music-api-jwzcyzizya.now.sh/api/search/song/netease?key=刘瑞琦&limit=5&page=1)
 
  - **musicAPI.searchAlbum(vendor, query)**
 
@@ -69,7 +70,7 @@ open browser: localhost:8080/search/song/all?key=林海
      raw: true or false
    }
    ```
-   example: [https://music-api-pjheqeosjj.now.sh/api/search/album/xiami?key=范宗沛&limit=5&page=1](https://music-api-pjheqeosjj.now.sh/api/search/album/xiami?key=范宗沛&limit=5&page=1)
+   example: [https://music-api-jwzcyzizya.now.sh/api/search/album/xiami?key=范宗沛&limit=5&page=1](https://music-api-jwzcyzizya.now.sh/api/search/album/xiami?key=范宗沛&limit=5&page=1)
 
  - **musicAPI.searchPlaylist(vendor, query)**
 
@@ -82,7 +83,7 @@ open browser: localhost:8080/search/song/all?key=林海
      raw: true or false
    }
    ```
-   example: [https://music-api-pjheqeosjj.now.sh/api/search/playlist/qq?key=周杰伦&limit=5&page=1](https://music-api-pjheqeosjj.now.sh/api/search/playlist/qq?key=周杰伦&limit=5&page=1)
+   example: [https://music-api-jwzcyzizya.now.sh/api/search/playlist/qq?key=周杰伦&limit=5&page=1](https://music-api-jwzcyzizya.now.sh/api/search/playlist/qq?key=周杰伦&limit=5&page=1)
 
  - **musicAPI.getSong(vendor, query)** (not work with raw now, keep it false)
 
@@ -94,7 +95,7 @@ open browser: localhost:8080/search/song/all?key=林海
      br: Bit rate (only support Netease ! default is 999000, example 128000 or 192000 or 320000)
    }
    ```
-   example: [https://music-api-pjheqeosjj.now.sh/api/get/song/qq?id=003OUlho2HcRHC](https://music-api-pjheqeosjj.now.sh/api/get/song/qq?id=003OUlho2HcRHC)
+   example: [https://music-api-jwzcyzizya.now.sh/api/get/song/qq?id=003OUlho2HcRHC](https://music-api-jwzcyzizya.now.sh/api/get/song/qq?id=003OUlho2HcRHC)
 
  - **musicAPI.getAlbum(vendor, query)**
 
@@ -105,7 +106,7 @@ open browser: localhost:8080/search/song/all?key=林海
      raw: true or false
    }
    ```
-   example: [https://music-api-pjheqeosjj.now.sh/api/get/album/qq?id=002J7XNt2m9sNc](https://music-api-pjheqeosjj.now.sh/api/get/album/qq?id=002J7XNt2m9sNc)
+   example: [https://music-api-jwzcyzizya.now.sh/api/get/album/qq?id=002J7XNt2m9sNc](https://music-api-jwzcyzizya.now.sh/api/get/album/qq?id=002J7XNt2m9sNc)
 
  - **musicAPI.getPlaylist(vendor, query)**
 
@@ -116,7 +117,7 @@ open browser: localhost:8080/search/song/all?key=林海
      raw: true or false
    }
    ```
-   example: [https://music-api-pjheqeosjj.now.sh/api/get/playlist/netease?id=461600464](https://music-api-pjheqeosjj.now.sh/api/get/playlist/netease?id=461600464)
+   example: [https://music-api-jwzcyzizya.now.sh/api/get/playlist/netease?id=461600464](https://music-api-jwzcyzizya.now.sh/api/get/playlist/netease?id=461600464)
 
  - **musicAPI.getSuggestAlbums(vendor, query)**
 
@@ -127,4 +128,4 @@ open browser: localhost:8080/search/song/all?key=林海
      raw: true or false
    }
    ```
-   example: [https://music-api-pjheqeosjj.now.sh/api/suggest/album/all?limit=10](https://music-api-pjheqeosjj.now.sh/api/suggest/album/all?limit=10)
+   example: [https://music-api-jwzcyzizya.now.sh/api/suggest/album/all?limit=10](https://music-api-jwzcyzizya.now.sh/api/suggest/album/all?limit=10)

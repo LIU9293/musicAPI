@@ -4,7 +4,7 @@
   "description": "Centralized NodeJS api sdk for xiami, netease, and qq music.",
   "main": "src/index.js",
   "scripts": {
-    "test": "node test/server.js",
+    "test": "PORT=8090 nodemon --inspect test/server.js",
     "start": "node test/server.js"
   },
   "keywords": [

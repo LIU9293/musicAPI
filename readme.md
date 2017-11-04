@@ -1,5 +1,8 @@
 # Centralized Node.js API for Netease, QQ, Xiami music
 
+![travis](https://travis-ci.org/LIU9293/musicAPI.svg?branch=master)
+![prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)
+
 > This SDK provide simple API interface based on Promise, netease API is get
 from github, qq api is get from y.qq.com and xiami api is get from xiami Mac App.
  Please make no commerical use of this project.

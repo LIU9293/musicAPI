@@ -6,7 +6,7 @@
   "scripts": {
     "express": "node server.js",
     "start": "node server.js",
-    "test": "mocha --timeout 10000",
+    "test": "mocha --timeout 15000",
     "build": "node index.js",
     "precommit": "prettier --write 'src/**/*.js'"
   },

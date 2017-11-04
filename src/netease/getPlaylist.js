@@ -13,7 +13,7 @@ const getPlaylist = (id, raw) => {
   }
   return new Promise((resolve, reject) => {
     NeteaseRequest('/v3/playlist/detail', encData)
-      .then((res) => {
+      .then(res => {
         const songList = res.playlist.tracks.map((item, index) => ({
           id: item.id,
           name: item.name,
@@ -45,7 +45,8 @@ const getPlaylist = (id, raw) => {
         reject({
           success: false,
           message: err.toString(),
-        }))
+        })
+      )
   })
 }
 

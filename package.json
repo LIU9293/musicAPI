@@ -5,23 +5,11 @@
   "main": "index.js",
   "scripts": {
     "express": "node server.js",
-    "start": "node index.js",
-    "precommit": "lint-staged"
+    "start": "node server.js",
+    "test": "mocha test/index.js",
+    "precommit": "prettier --write 'src/**/*.js'"
   },
-  "lint-staged": {
-    "*.{js,json,css}": [
-      "prettier --write",
-      "git add"
-    ]
-  },
-  "keywords": [
-    "API",
-    "SDK",
-    "Music",
-    "Xiami",
-    "Netease",
-    "QQMusic"
-  ],
+  "keywords": ["API", "SDK", "Music", "Xiami", "Netease", "QQMusic"],
   "repository": {
     "type": "git",
     "url": "https://github.com/LIU9293/musicAPI.git"

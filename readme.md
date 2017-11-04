@@ -26,7 +26,7 @@ musicAPI.searchSong('netease', {
 git clone https://github.com/LIU9293/musicAPI.git
 cd musicAPI
 npm install
-npm run test
+npm start
 
 // open another terminal
 curl http://localhost:8080/api/search/song/all?key=taylor&limit=5&page=1

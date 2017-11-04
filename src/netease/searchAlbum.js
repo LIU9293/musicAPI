@@ -12,7 +12,7 @@ const searchAlbum = (key, limit, page, raw) => {
   if (!raw) {
     return new Promise((resolve, reject) => {
       NeteaseRequest('/cloudsearch/get/web?csrf_token=', encData)
-        .then((res) => {
+        .then(res => {
           const albumList = res.result.albums.map(item => ({
             id: item.id,
             cover: `${item.picUrl}?param=250y250`,
@@ -34,7 +34,8 @@ const searchAlbum = (key, limit, page, raw) => {
           reject({
             success: false,
             message: err.toString(),
-          }))
+          })
+        )
     })
   }
   return NeteaseRequest('/cloudsearch/get/web?csrf_token=', encData)

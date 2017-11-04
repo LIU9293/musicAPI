@@ -11,7 +11,7 @@ const getAlbum = (id, raw) => {
   }
   return new Promise((resolve, reject) => {
     NeteaseRequest(`/v1/album/${id}`, encData)
-      .then((res) => {
+      .then(res => {
         const ab = res.songs
         const songList = ab.map(item => ({
           id: item.id,
@@ -47,7 +47,8 @@ const getAlbum = (id, raw) => {
         reject({
           success: false,
           message: err.toString(),
-        }))
+        })
+      )
   })
 }
 

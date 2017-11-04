@@ -1,11 +1,12 @@
 {
   "name": "music-api",
   "version": "0.3.11",
-  "description": "Centralized NodeJS api sdk for xiami, netease, and qq music.",
-  "main": "src/index.js",
+  "description": "Centralized NodeJS API SDK for xiami, netease, and qq music.",
+  "main": "index.js",
   "scripts": {
-    "test": "node test/server.js",
-    "start": "node test/server.js"
+    "express": "node server.js",
+    "start": "node index.js",
+    "precommit": "eslint -fix 'src/**/*.js'"
   },
   "keywords": ["API", "SDK", "Music", "Xiami", "Netease", "QQMusic"],
   "repository": {
@@ -15,18 +16,27 @@
   "author": "Liu Kai - https://github.com/LIU9293",
   "license": "MIT",
   "dependencies": {
-    "big-integer": "^1.6.17",
-    "crypto-browserify": "^3.11.1",
-    "es6-promise": "^4.1.1",
-    "isomorphic-fetch": "^2.2.1",
-    "querystring": "^0.2.0",
-    "string": "^3.3.3",
-    "xml-js": "^1.4.1"
+    "big-integer": "1.6.17",
+    "es6-promise": "4.1.1",
+    "isomorphic-fetch": "2.2.1",
+    "querystring": "0.2.0",
+    "string": "3.3.3",
+    "xml-js": "1.4.1"
   },
   "devDependencies": {
-    "compression": "^1.6.2",
-    "cors": "^2.8.3",
-    "express": "^4.14.0",
-    "morgan": "^1.8.2"
+    "babel-core": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "babel-register": "^6.26.0",
+    "compression": "1.6.2",
+    "cors": "2.8.3",
+    "eslint": "4.10.0",
+    "eslint-config-airbnb-base": "12.1.0",
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-prettier": "2.3.1",
+    "express": "4.14.0",
+    "husky": "^0.14.3",
+    "mocha": "4.0.1",
+    "morgan": "1.8.2",
+    "prettier": "1.7.4"
   }
 }

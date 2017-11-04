@@ -9,10 +9,7 @@ const searchSong = (vendor, query) => {
       message: 'No search key provided !',
     })
   }
-  let limit = query.limit || 10,
-    page = query.page || 1,
-    key = query.key,
-    raw = query.raw || null
+  const { limit = 10, page = 1, key, raw } = query
   switch (vendor) {
     case 'xiami':
       return XiamiAPI.searchSong(key, limit, page, raw)
@@ -51,10 +48,7 @@ const searchAlbum = (vendor, query) => {
       message: 'No search key provided !',
     })
   }
-  let limit = query.limit || 10,
-    page = query.page || 1,
-    key = query.key,
-    raw = query.raw || null
+  const { limit = 10, page = 1, key, raw } = query
   switch (vendor) {
     case 'xiami':
       return XiamiAPI.searchAlbum(key, limit, page, raw)
@@ -93,10 +87,7 @@ const searchPlaylist = (vendor, query) => {
       message: 'No search key provided !',
     })
   }
-  let limit = query.limit || 10,
-    page = query.page || 1,
-    key = query.key,
-    raw = query.raw || null
+  const { limit = 10, page = 1, key, raw } = query
   switch (vendor) {
     case 'xiami':
       return XiamiAPI.searchPlaylist(key, limit, page, raw)
@@ -135,9 +126,7 @@ const getSong = (vendor, query) => {
       message: 'No song id provided !',
     })
   }
-  let raw = query.raw,
-    br = query.br || 999000,
-    id = query.id
+  const { raw, br = 999000, id } = query
   switch (vendor) {
     case 'xiami':
       return XiamiAPI.getSong(id, raw)
@@ -157,8 +146,7 @@ const getAlbum = (vendor, query) => {
       message: 'No album id provided !',
     })
   }
-  let raw = query.raw,
-    id = query.id
+  const { raw, id } = query
   switch (vendor) {
     case 'xiami':
       return XiamiAPI.getAlbum(id, raw)
@@ -178,8 +166,7 @@ const getPlaylist = (vendor, query) => {
       message: 'No playlist id provided !',
     })
   }
-  let raw = query.raw,
-    id = query.id
+  const { raw, id } = query
   switch (vendor) {
     case 'xiami':
       return XiamiAPI.getPlaylist(id, raw)
@@ -197,8 +184,7 @@ const searchSuggestion = key => QQAPI.searchSuggestion(key)
 const getSuggestSongs = () => XiamiAPI.getSuggestSongs(20)
 
 const getSuggestAlbums = (vendor, query) => {
-  const limit = query.limit || 10
-  const raw = query.raw || null
+  const { raw, limit = 10 } = query
   switch (vendor) {
     case 'qq':
       return QQAPI.getSuggestAlbums(limit, raw)

@@ -1,11 +1,11 @@
+/* global fetch */
 const querystring = require('querystring')
 const convert = require('xml-js')
+const Crypto = require('./crypto')
+
 const baseURL = 'http://api.xiami.com/web?'
 const NEW_API_URL = 'http://acs.m.xiami.com/h5/'
-const Crypto = require('./crypto')
-const g = typeof window === 'undefined' ? global : window
-require('es6-promise').polyfill()
-require('isomorphic-fetch')
+const g = global
 
 /*
  * this api is using by http://h.xiami.com, xiami's mobile site.
@@ -46,13 +46,9 @@ const searchSong = (key, limit, page, raw) => {
             album: {
               id: item.album_id,
               name: item.album_name,
-              cover: item.album_logo
-                .replace('http', 'https')
-                .replace('1.jpg', '2.jpg'),
-              coverBig: item.album_logo
-                .replace('http', 'https')
-                .replace('1.jpg', '2.jpg'),
-              coverSmall: item.album_logo.replace('http', 'https'),
+              cover: item.album_logo.replace('1.jpg', '2.jpg'),
+              coverBig: item.album_logo.replace('1.jpg', '2.jpg'),
+              coverSmall: item.album_logo,
             },
             artists: [
               {
@@ -92,31 +88,14 @@ const searchSong = (key, limit, page, raw) => {
   })
 }
 
-const getPlayListByHot = () =>
-  xiamiFetch({
-    v: '2.0',
-    app_key: 1,
-    r: 'collect/recommand',
-  })
-
-const getSongsByArtist = (artistID, limit, page) =>
-  xiamiFetch({
-    v: '2.0',
-    app_key: 1,
-    id: artistID,
-    page,
-    limit,
-    r: 'artist/hot-songs',
-  })
-
 /*
  * song detail: GET http://www.xiami.com/song/playlist/id/:id  id example: 20566
  * convert location to url
  * origin python code by : https://github.com/wolfhong/xiamiclient/blob/master/xiamiclient/client.py
  */
-
+/* eslint-disable */
 const parseLocation = location => {
-  const head = parseInt(location.substr(0, 1))
+  const head = parseInt(location.substr(0, 1), 10)
   const _str = location.substr(1)
   const rows = head
   const cols = parseInt(_str.length / rows) + 1
@@ -176,7 +155,7 @@ const getSong = (id, raw) =>
           resolve(obj)
         }
       })
-      .catch(err =>
+      .catch(() =>
         reject({
           success: false,
           message: '虾米 - 歌曲需要付费或者ID错误!',
@@ -219,7 +198,7 @@ const newRequest = (api, query) => {
     })
   }
   return new Promise((resolve, reject) => {
-    makeXiamiRequest(api, query, `${g.XIAMI_TOKEN}1`, g.XIAMI_SIGNED_TOKEN)
+    makeXiamiRequest(api, query, g.XIAMI_TOKEN, g.XIAMI_SIGNED_TOKEN)
       .then(res => {
         if (JSON.stringify(res.data) === '{}') {
           throw 'sign error'
@@ -243,8 +222,8 @@ const newRequest = (api, query) => {
           .then(res => {
             resolve(res)
           })
-          .catch(err => {
-            reject(err)
+          .catch(e => {
+            reject(e)
           })
       })
   })
@@ -292,7 +271,6 @@ const makeXiamiRequest = (api, query, token, signedToken) => {
   })
 
   return new Promise((resolve, reject) => {
-    const random = Math.floor(Math.random() * 244) + 1
     /*
      * use token to get sign
      */
@@ -319,7 +297,6 @@ const makeXiamiRequest = (api, query, token, signedToken) => {
       headers: {
         Host: 'acs.m.xiami.com',
         'Content-Type': 'application/x-www-form-urlencoded',
-        'X-Real-IP': `211.161.244.${random}`,
         Cookie: `${token[0]};${token[1]}`,
       },
     }
@@ -485,7 +462,7 @@ const getAlbum = (id, raw) => {
         }
         resolve(obj)
       })
-      .catch(err =>
+      .catch(() =>
         reject({
           success: false,
           message:
@@ -567,7 +544,7 @@ const getPlaylist = (id, raw) => {
         }
         resolve(obj)
       })
-      .catch(err =>
+      .catch(() =>
         reject({
           success: false,
           message:
@@ -611,12 +588,9 @@ const getSuggestSongs = (limit, raw) => {
             album: {
               name: item.albumName,
               id: item.artistId,
-              cover: `${item.albumLogo.replace('http', 'https')}@!c-185-185`,
-              coverBig: item.albumLogo.replace('http', 'https'),
-              coverSmall: `${item.albumLogo.replace(
-                'http',
-                'https'
-              )}@!c-185-185`,
+              cover: `${item.albumLogo}@!c-185-185`,
+              coverBig: item.albumLogo,
+              coverSmall: `${item.albumLogo}@!c-185-185`,
             },
             artists: [
               {
@@ -636,7 +610,7 @@ const getSuggestSongs = (limit, raw) => {
           songList,
         })
       })
-      .catch(err => {
+      .catch(() => {
         reject({
           success: false,
           message:
@@ -681,7 +655,7 @@ const getSuggestPlaylists = (limit, raw) => {
           playlists,
         })
       })
-      .catch(err =>
+      .catch(() =>
         reject({
           success: false,
           message:
@@ -726,7 +700,7 @@ const getSuggestAlbums = (limit, raw) => {
           albumList,
         })
       })
-      .catch(err =>
+      .catch(() =>
         reject({
           success: false,
           message:

@@ -1,16 +1,9 @@
-/*
- * php api => https://github.com/metowolf/TencentMusicApi/blob/master/TencentMusicAPI.php
- */
+// php api => https://github.com/metowolf/TencentMusicApi/blob/master/TencentMusicAPI.php
+/* global fetch */
 const querystring = require('querystring')
-const origin = 'http://y.qq.com/'
 const S = require('string')
 require('es6-promise').polyfill()
 require('isomorphic-fetch')
-
-const header = {
-  Origin: origin,
-  Referer: origin,
-}
 
 const getSongNew = (mid, sizekey) =>
   new Promise((resolve, reject) => {
@@ -20,12 +13,12 @@ const getSongNew = (mid, sizekey) =>
     )
       .then(res => res.text())
       .then(text => {
-        text = text.replace('jsonCallback(', '').trim()
-        text = text.substr(0, text.length - 2)
-        return Promise.resolve(JSON.parse(text))
+        let res = text.replace('jsonCallback(', '').trim()
+        res = res.substr(0, text.length - 2)
+        return Promise.resolve(JSON.parse(res))
       })
       .then(json => {
-        const key = json.key
+        const { key } = json
         let perfix = ''
         if (sizekey === 'size128') {
           perfix = 'M500'
@@ -63,7 +56,7 @@ const generateKey = mid => {
           resolve('size128')
         }
       })
-      .catch(err =>
+      .catch(() =>
         reject({
           success: false,
           message: 'QQ - 歌曲需要付费或者ID错误!',
@@ -72,7 +65,7 @@ const generateKey = mid => {
   })
 }
 
-const getSong = (mid, raw) =>
+const getSong = mid =>
   new Promise((resolve, reject) => {
     generateKey(mid)
       .then(size => getSongNew(mid, size))
@@ -95,8 +88,11 @@ const searchSong = (key, limit, page, raw) => {
       .then(res => res.text())
       .then(text => {
         if (text.substr(0, 8) === 'callback') {
-          text = text.replace('callback(', '')
-          const json = JSON.parse(text.substr(0, text.length - 1))
+          const json = JSON.parse(
+            text
+              .replace('callback(', '')
+              .substr(0, text.replace('callback(', '').length - 1)
+          )
           if (!raw) {
             const songList = json.data.song.list.map(item => ({
               album: {
@@ -172,7 +168,7 @@ const searchPlaylist = (key, limit, page, raw) => {
                 .stripTags().s,
               author: {
                 name: item.creator.name,
-                id: parseInt(item.creator.creator_uin),
+                id: parseInt(item.creator.creator_uin, 10),
                 avatar: item.creator.avatarUrl,
               },
             }
@@ -302,7 +298,7 @@ const getAlbum = (mid, raw) => {
         }
         resolve(obj)
       })
-      .catch(err =>
+      .catch(() =>
         reject({
           success: false,
           message:
@@ -334,9 +330,8 @@ const getPlaylist = (disstid, raw) => {
     })
       .then(res => res.text())
       .then(text => {
-        text = text.substr(13)
-        text = text.substr(0, text.length - 1)
-        return Promise.resolve(JSON.parse(text))
+        const jsonText = text.substr(13).substr(0, text.substr(13).length - 1)
+        return Promise.resolve(JSON.parse(jsonText))
       })
       .then(pl => {
         if (raw) {
@@ -369,7 +364,7 @@ const getPlaylist = (disstid, raw) => {
         }
         resolve(obj)
       })
-      .catch(err =>
+      .catch(() =>
         reject({
           success: false,
           message:

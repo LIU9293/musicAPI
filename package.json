@@ -7,6 +7,7 @@
     "express": "node server.js",
     "start": "node server.js",
     "test": "mocha test/index.js",
+    "build": "node index.js",
     "precommit": "prettier --write 'src/**/*.js'"
   },
   "keywords": ["API", "SDK", "Music", "Xiami", "Netease", "QQMusic"],

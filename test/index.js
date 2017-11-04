@@ -1,7 +1,8 @@
 // const assert = require('assert')
 const { searchSong, searchAlbum, searchPlaylist } = require('../src')
 
-describe('Search Song...', () => {
+describe('Search Song...', function() {
+  this.retries(2)
   it('should be success to search songs in netease', done => {
     searchSong('netease', { key: 'taylor' })
       .then(res => {
@@ -37,7 +38,8 @@ describe('Search Song...', () => {
   })
 })
 
-describe('Search Album...', () => {
+describe('Search Album...', function() {
+  this.retries(2)
   it('should be success to search albums in netease', done => {
     searchAlbum('netease', { key: 'taylor' })
       .then(res => {
@@ -73,7 +75,8 @@ describe('Search Album...', () => {
   })
 })
 
-describe('Search Playlist...', () => {
+describe('Search Playlist...', function() {
+  this.retries(2)
   it('should be success to search playlist in netease', done => {
     searchPlaylist('netease', { key: 'taylor' })
       .then(res => {

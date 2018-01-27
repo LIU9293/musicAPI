@@ -18,7 +18,6 @@
   "author": "Liu Kai - https://github.com/LIU9293",
   "license": "MIT",
   "dependencies": {
-    "babel-register": "6.26.0",
     "big-integer": "1.6.17",
     "es6-promise": "4.1.1",
     "isomorphic-fetch": "2.2.1",
@@ -27,8 +26,6 @@
     "xml-js": "1.4.1"
   },
   "devDependencies": {
-    "babel-core": "6.26.0",
-    "babel-preset-env": "1.6.1",
     "compression": "1.6.2",
     "cors": "2.8.3",
     "eslint": "4.10.0",
